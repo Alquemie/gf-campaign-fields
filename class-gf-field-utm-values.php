@@ -478,7 +478,7 @@ class GF_Field_UTM_Values extends GF_Field {
 	public function get_admin_buttons() {
 
 		$duplicate_field_link = '';
-		$delete_field_link = "<a class='field_delete_icon' id='gfield_delete_{$this->id}' title='" . esc_attr__( 'click to delete this field', 'gravityforms' ) . "' href='#' onclick='StartDeleteField(this); return false;' onkeypress='StartDeleteField(this); return false;'><i class='fa fa-times fa-lg'></i></a>";
+		$delete_field_link = "<a class='field_delete_icon' id='gfield_delete_{$this->id}' title='" . esc_attr__( 'click to delete this field', 'gravityforms' ) . "' href='#' onclick='DeleteField(this); return false;' onkeypress='DeleteField(this); return false;'><i class='fa fa-times fa-lg'></i></a>";
 
 		$delete_field_link = apply_filters( 'gform_delete_field_link', $delete_field_link );
 		$field_type_title  = esc_html( GFCommon::get_field_type_title( $this->type ) );

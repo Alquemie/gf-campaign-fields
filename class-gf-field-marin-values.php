@@ -16,7 +16,6 @@ class AqGF_Marin extends GF_Field {
 
 		public function __construct( $data = array() ) {
 			parent::__construct($data);
-			// add_action('wp_footer', array($this, 'check_marin_kwid_values'), 50 );
 			add_action('wp_head', array($this, 'set_marin_parms'), 100 );
 		}
 
@@ -46,6 +45,26 @@ class AqGF_Marin extends GF_Field {
 		    );
 		}
 
+		public function get_entry_inputs() {
+			$this->inputs = array(
+					array(
+						'id'           => $this->id . '.1',
+						'title'        => esc_html__( 'Marin KW', GF_CAMPAIGN_FIELD_SLUG ),
+						'label'			=> esc_html__( 'MKWID', GF_CAMPAIGN_FIELD_SLUG ),
+						'default_value' => array('aliases' => GF_CAMPAIGN_MERGETAG_MATCHTYPE),
+
+					),
+					array(
+						'id'           => $this->id . '.2',
+						'title'        => esc_html__( 'Creative', GF_CAMPAIGN_FIELD_SLUG ),
+						'label'			=> esc_html__( 'PCRID', GF_CAMPAIGN_FIELD_SLUG ),
+						'default_value' => array('aliases' => GF_CAMPAIGN_MERGETAG_GLCID),
+					),
+
+				);
+
+			return $this->inputs;
+		}
 
 		public function get_field_input( $form, $value = '', $entry = null ) {
 			$form_id         = $form['id'];
@@ -96,7 +115,7 @@ class AqGF_Marin extends GF_Field {
 
 			$duplicate_field_link = '';
 
-			$delete_field_link = "<a class='field_delete_icon' id='gfield_delete_{$this->id}' title='" . esc_attr__( 'click to delete this field', 'gravityforms' ) . "' href='#' onclick='StartDeleteField(this); return false;' onkeypress='StartDeleteField(this); return false;'><i class='fa fa-times fa-lg'></i></a>";
+			$delete_field_link = "<a class='field_delete_icon' id='gfield_delete_{$this->id}' title='" . esc_attr__( 'click to delete this field', 'gravityforms' ) . "' href='#' onclick='DeleteField(this); return false;' onkeypress='DeleteField(this); return false;'><i class='fa fa-times fa-lg'></i></a>";
 			$delete_field_link = apply_filters( 'gform_delete_field_link', $delete_field_link );
 			$field_type_title  = esc_html( GFCommon::get_field_type_title( $this->type ) );
 
