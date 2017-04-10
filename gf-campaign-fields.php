@@ -26,6 +26,7 @@ define( 'GF_CAMPAIGN_MERGETAG_TERM', '{aq_campaign_term}');
 define( 'GF_CAMPAIGN_MERGETAG_CONTENT', '{aq_campaign_content}');
 
 define( 'GF_CAMPAIGN_MERGETAG_MKWID', '{aq_marin_kwid}');
+define( 'GF_CAMPAIGN_MERGETAG_PCRID', '{aq_pcrid}');
 define( 'GF_CAMPAIGN_MERGETAG_MATCHTYPE', '{aq_sem_matchtype}');
 define( 'GF_CAMPAIGN_MERGETAG_GLCID', '{aq_adwords_glcid}');
 
@@ -178,6 +179,17 @@ class AqGFCampaignAddOn extends GFAddOn {
 					'tooltip'           => esc_html__( 'Query String Variable that is used to set the Marin KW ID', GF_CAMPAIGN_FIELD_SLUG ),
 					'tooltip_class'     => 'tooltipclass',
 					'feedback_callback' => array( $this, 'no_whitespace' ),
+				),array(
+					'type'              => 'text',
+					'id'                => 'aq_marin_pcrid',
+					'name'                => 'aq_marin_pcrid',
+					'label'             => esc_html__( 'Marin Creative ID', GF_CAMPAIGN_FIELD_SLUG ),
+					'required'          => true,
+					'default_value'     => 'pcrid',
+					'class'             => 'medium',
+					'tooltip'           => esc_html__( 'Query String Variable that is used to set the Marin Content ID', GF_CAMPAIGN_FIELD_SLUG ),
+					'tooltip_class'     => 'tooltipclass',
+					'feedback_callback' => array( $this, 'no_whitespace' ),
 				),
 
 				)
@@ -194,87 +206,6 @@ class AqGFCampaignAddOn extends GFAddOn {
 		return (!preg_match('/\s+/', $value) && ($value !== ''));
 	}
 }
-
-/*
-add_filter( 'gform_replace_merge_tags', 'replace_devicetype_value', 10, 7 );
-function replace_devicetype_value( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
-
-    if ( strpos( $text, GF_CAMPAIGN_MERGETAG_DEVICETYPE ) !== false ) {
-			require plugin_dir_path( __FILE__ ) . 'includes/whichbrowser/autoload.php';
-			$result = new WhichBrowser\Parser(getallheaders());
-			$devicetype = $result->device->type;
-			$deviceos = $result->device->os;
-			$devicebrowser = $result->browser->name;
-
-	    $text = str_replace( GF_CAMPAIGN_MERGETAG_DEVICETYPE, $devicetype, $text );
-			$text = str_replace( GF_CAMPAIGN_MERGETAG_DEVICEBROWSER, $devicebrowser, $text );
-			$text = str_replace( GF_CAMPAIGN_MERGETAG_DEVICEOS, $deviceos, $text );
-		}
-
-		if ( strpos( $text, GF_CAMPAIGN_MERGETAG_SOURCE  ) !== false ) {
-			$source = (isset($_GET['_source'])) ? $_GET['_source'] : '';
-			$source = (isset($_GET['utm_source']) && $source == '') ? $_GET['utm_source'] : '';
-			$source = (isset($_COOKIE['aq_source']) && $source == '') ? $_COOKIE['aq_source'] : '';
-
-			$text = str_replace( GF_CAMPAIGN_MERGETAG_SOURCE, $source, $text );
-		}
-
-		if ( strpos( $text, GF_CAMPAIGN_MERGETAG_MEDIUM  ) !== false ) {
-			$medium =  (isset($_GET['_medium'])) ? $_GET['_medium'] : '';
-			$medium =  (isset($_GET['utm_medium']) && $medium == '') ? $_GET['utm_medium'] : '';
-			$medium =  (isset($_COOKIE['aq_medium']) && $medium == '') ? $_COOKIE['aq_medium'] : '';
-
-			$text = str_replace( GF_CAMPAIGN_MERGETAG_MEDIUM, $medium, $text );
-		}
-
-		if ( strpos( $text, GF_CAMPAIGN_MERGETAG_NAME  ) !== false ) {
-			$name =  (isset($_GET['_campaign'])) ? $_GET['_campaign'] : '';
-			$name =  (isset($_GET['utm_campaign']) && $name == '') ? $_GET['utm_campaign'] : '';
-			$name =  (isset($_COOKIE['aq_campaign']) && $name == '') ? $_COOKIE['aq_campaign'] : $_COOKIE['aq_campaign'];
-			$text = str_replace( GF_CAMPAIGN_MERGETAG_NAME, $name, $text );
-
-		}
-
-		if ( strpos( $text, GF_CAMPAIGN_MERGETAG_TERM  ) !== false ) {
-			$term =  (isset($_GET['_term'])) ? $_GET['_term'] : '';
-			$term =  (isset($_GET['utm_term']) && $term == '') ? $_GET['utm_term'] : '';
-			$term =  (isset($_COOKIE['aq_term']) && $term == '') ? $_COOKIE['aq_term'] : '';
-
-			$text = str_replace( GF_CAMPAIGN_MERGETAG_TERM, $term, $text );
-		}
-
-		if ( strpos( $text, GF_CAMPAIGN_MERGETAG_CONTENT  ) !== false ) {
-			$content =  (isset($_GET['_content'])) ? $_GET['_content'] : '';
-			$content =  (isset($_GET['utm_content']) && $content == '') ? $_GET['utm_content'] : '';
-			$content =  (isset($_COOKIE['aq_content']) && $content == '') ? $_COOKIE['aq_content'] : '';
-
-			$text = str_replace( GF_CAMPAIGN_MERGETAG_CONTENT, $content, $text );
-		}
-
-		if ( strpos( $text, GF_CAMPAIGN_MERGETAG_GLCID  ) !== false ) {
-			$glcid =  (isset($_GET['glcid'])) ? $_GET['glcid'] : '';
-			$glcid =  (isset($_COOKIE['aq_glcid']) && $content == '') ? $_COOKIE['aq_glcid'] : '';
-
-			$text = str_replace( GF_CAMPAIGN_MERGETAG_GLCID, $glcid, $text );
-		}
-
-		if ( strpos( $text, GF_CAMPAIGN_MERGETAG_MKWID ) !== false ) {
-			$glcid =  (isset($_GET['_mkwid'])) ? $_GET['_mkwid'] : '';
-			$glcid =  (isset($_COOKIE['aq_mkwid']) && $content == '') ? $_COOKIE['aq_mkwid'] : '';
-
-			$text = str_replace( GF_CAMPAIGN_MERGETAG_MKWID, $glcid, $text );
-		}
-
-		if ( strpos( $text, GF_CAMPAIGN_MERGETAG_MATCHTYPE  ) !== false ) {
-			$match =  (isset($_GET['_match'])) ? $_GET['_match'] : '';
-			$glcid =  (isset($_COOKIE['aq_matchtype']) && $content == '') ? $_COOKIE['aq_matchtype'] : '';
-
-			$text = str_replace( GF_CAMPAIGN_MERGETAG_MATCHTYPE, $match, $text );
-		}
-
-    return $text;
-}
-*/
 
 add_action( 'gform_loaded', array( 'AQ_Campaign_AddOn_Bootstrap', 'load' ), 5 );
 
@@ -335,7 +266,6 @@ function aq_capture_campaign_values() {
 </script>
     <?php
 }
-// add_action('wp_head', 'aq_capture_campaign_values');
 
 function aq_include_whichbrowser() {
 	$mypath = plugins_url( 'includes/whichbrowser/server/detect.php', __FILE__ );
@@ -353,76 +283,3 @@ function aq_include_whichbrowser() {
 add_action('wp_head', 'aq_include_whichbrowser');
 
 wp_enqueue_script( 'aq_campaign_js', plugins_url( 'gf-campaigns.js', __FILE__ ), null, null, true );
-
-/*
-document.addEventListener("DOMContentLoaded", function(event) {
-
-		var source = getUrlParameter('_source');
-		var altsource = getUrlParameter('utm_source');
-		if (source !== '') {
-			setCookie('aq_source', source);
-		} else if (altsource !== '') {
-			setCookie('aq_source', altsource);
-		}
-
-
-	// if (getCookie('aq_campaign') != '') {
-		var campaign = getUrlParameter('_campaign');
-		var altcampaign = getUrlParameter('utm_campaign');
-		if (campaign !== '') {
-			setCookie('aq_campaign', campaign);
-		} else if (altcampaign !== '') {
-			setCookie('aq_campaign', altcampaign);
-		}
-	// }
-
-	// if (getCookie('aq_medium') != '') {
-		var medium = getUrlParameter('utm_medium');
-		if (medium !== '') {
-			setCookie('aq_medium', medium);
-		}
-	// }
-
-	// if (getCookie('aq_term') != '') {
-		var term = getUrlParameter('_kw');
-		var altterm = getUrlParameter('utm_term');
-		if (term !== '') {
-			setCookie('aq_term', term);
-		} else if (altterm !== '') {
-			setCookie('aq_term', altterm);
-		}
-	// }
-
-	// if (getCookie('aq_content') != '') {
-		var content = getUrlParameter('_group');
-		var altcontent = getUrlParameter('utm_content');
-		if (content !== '') {
-			setCookie('aq_content', content);
-		} else if (altcontent !== '') {
-			setCookie('aq_content', altcontent);
-		}
-	// }
-
-	// if (getCookie('aq_matchtype') != '') {
-		var matchtype = getUrlParameter('_match');
-		if (matchtype !== '') {
-			setCookie('aq_matchtype', matchtype);
-		}
-	// }
-
-	// if (getCookie('aq_mkwid') != '') {
-		var mwkid = getUrlParameter('_mkwid');
-		if (mwkid !== '') {
-			setCookie('aq_mkwid', mwkid);
-		}
-	// }
-
-	// if (getCookie('glcid') != '') {
-		var glcid = getUrlParameter('glcid');
-		if (glcid !== '') {
-			setCookie('aq_glcid', glcid);
-		}
-	// }
-
-});
- */
