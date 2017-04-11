@@ -24,7 +24,7 @@ The plugin currently supports:
 
 ## Frequently Asked Questions
 
-= Does this plugin include Gravity Forms? =
+### Does this plugin include Gravity Forms?
 
 No, you must purchase your own license of Gravity Forms
 
@@ -36,5 +36,5 @@ No, you must purchase your own license of Gravity Forms
 
 ## Changelog
 
-= 1.0 =
+### 1.0 
 * The initial release.
