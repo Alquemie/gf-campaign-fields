@@ -1,4 +1,5 @@
-# Gravity Forms Campaign Fields
+# Campaign Fields for Gravity Forms
+
 Add custom field types to Gravity Forms that allow campaign data be stored with the form entry and be transmitted to 3rd party tools
 
 ## Description
@@ -36,5 +37,5 @@ No, you must purchase your own license of Gravity Forms
 
 ## Changelog
 
-### 1.0 
+### 1.0
 * The initial release.
