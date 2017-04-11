@@ -1,4 +1,4 @@
-=== Gravity Forms Campaign Fields Add-On ===
+=== Gravity Forms Campaign Fields ===
 Contributors: alquemie
 Tags: gravity forms, google analytics, marketing
 Requires at least: 4.0
