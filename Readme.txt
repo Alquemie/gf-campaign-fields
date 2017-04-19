@@ -1,9 +1,9 @@
-=== Campaign Fields for Gravity Forms ===
+=== Gravity Forms Campaign Fields Add-On ===
 Contributors: alquemie
 Tags: gravity forms, google analytics, marketing
 Requires at least: 4.0
-Tested up to: 4.3.7
-Stable tag: 1.0
+Tested up to: 4.7.3
+Stable tag: 1.1.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -11,11 +11,9 @@ Add hidden fields to capture marketing campaign data in Gravity Forms.
 
 == Description ==
 
-This plugin adds advanced fields to Gravity Forms that collect campaign and device data and attaches
-the data to form entries.
+This plugin adds advanced fields to Gravity Forms that collect campaign and device data and attaches the data to form entries.
 
-The plugin can be configured to track first touch or last touch attribution and the campaign query string
-parameters are customizable.
+The plugin can be configured to track first touch or last touch attribution and the campaign query string parameters are customizable.
 
 The plugin currently supports:
 
@@ -44,5 +42,15 @@ No, you must purchase your own license of Gravity Forms
 
 == Changelog ==
 
-= 1.0 =
+= 1.1.6 =
+* Configuration Error fix
+
+= 1.1.5 =
+* Fixed JS errors
+
+= 1.1 =
+* Fixed readme.txt format issues
+* Fixed version inconsistencies
+
+= 1.0.5 =
 * The initial release.

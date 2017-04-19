@@ -36,6 +36,7 @@ var AqTerm = '';
 var AqContent = '';
 var AqMatchType = '';
 var AqMKWID = '';
+var AqPCRID = '';
 var AqGCLID = '';
 
 if (AqAttribution == 'first') {
@@ -57,7 +58,7 @@ if (AqMedium == '') { AqMedium = (AqGfCampaignData.getUrlParameter(AqMediumQS) !
 if (AqTerm == '') { AqTerm = (AqGfCampaignData.getUrlParameter(AqTermQS) != '') ? AqGfCampaignData.getUrlParameter(AqTermQS) : ''; }
 if (AqContent == '') { AqContent = (AqGfCampaignData.getUrlParameter(AqContentQS) != '') ? AqGfCampaignData.getUrlParameter(AqContentQS) : ''; }
 if (AqMKWID == '') { AqMKWID = (AqGfCampaignData.getUrlParameter(AqMKWIDQS) != '') ? AqGfCampaignData.getUrlParameter(AqMKWIDQS) : ''; }
-if (AqPCRID == '') { AqMKWID = (AqGfCampaignData.getUrlParameter(AqPCRIDQS) != '') ? AqGfCampaignData.getUrlParameter(AqPCRIDQS) : ''; }
+if (AqPCRID == '') { AqPCRID = (AqGfCampaignData.getUrlParameter(AqPCRIDQS) != '') ? AqGfCampaignData.getUrlParameter(AqPCRIDQS) : ''; }
 if (AqMatchType == '') { AqMatchType = (AqGfCampaignData.getUrlParameter(AqMatchTypeQS) != '') ? AqGfCampaignData.getUrlParameter(AqMatchTypeQS) : ''; }
 if (AqGCLID == '') { AqGCLID = (AqGfCampaignData.getUrlParameter('gclid') != '') ? AqGfCampaignData.getUrlParameter('gclid') : ''; }
 
@@ -109,7 +110,7 @@ for( i = 0; i < semfields.length; i++) {
   if (AqGCLID != '') { document.getElementById(semfields[i].id + '_2').value = AqGCLID; }
 }
 
-var marinfields = document.getElementsByClassName('gform_aq_marin');
+var marinfields = document.getElementsByClassName('gfield_aq_marin');
 for( i = 0; i < marinfields.length; i++) {
 	if (AqMKWID != '') { document.getElementById(semfields[i].id + '_1').value = AqMKWID; }
 	if (AqPCRID != '') { document.getElementById(semfields[i].id + '_2').value = AqPCRID; }

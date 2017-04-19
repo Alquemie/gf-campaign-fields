@@ -3,16 +3,16 @@
   Plugin Name: Gravity Forms Campaign Fields
   Plugin URI: https://www.gravityaddons.com/
   Description: Creates new field types that are populated with Google Analytics campaign data
-  Version: 1.0.5
+  Version: 1.1.6
   Author: Alquemie
-  Author URI: https://www.alquemie.net
+  Author URI: https://www.alquemie.net/
 */
 
 if ( ! class_exists( 'GFForms' ) ) {
 	die();
 }
 
-define( 'GF_CAMPAIGN_FIELD_VERSION', '1.0.0' );
+define( 'GF_CAMPAIGN_FIELD_VERSION', '1.1.0' );
 define( 'GF_CAMPAIGN_FIELD_SLUG', 'alquemiegravityfields' );
 
 define( 'GF_CAMPAIGN_MERGETAG_DEVICETYPE', '{aq_device_type}');

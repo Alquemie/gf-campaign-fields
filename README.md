@@ -4,11 +4,9 @@ Add custom field types to Gravity Forms that allow campaign data be stored with 
 
 ## Description
 
-This plugin adds advanced fields to Gravity Forms that collect campaign and device data and attaches
-the data to form entries.
+This plugin adds advanced fields to Gravity Forms that collect campaign and device data and attaches the data to form entries.
 
-The plugin can be configured to track first touch or last touch attribution and the campaign query string
-parameters are customizable.
+The plugin can be configured to track first touch or last touch attribution and the campaign query string parameters are customizable.
 
 The plugin currently supports:
 
@@ -36,6 +34,16 @@ No, you must purchase your own license of Gravity Forms
 2. Building a form that contains campaign fields
 
 ## Changelog
+
+### 1.1.6
+* Configuration Error fix
+
+### 1.1.5
+* Fixed JS errors
+
+### 1.1.0
+* Fixed readme.txt format issues
+* Fixed version inconsistencies
 
 ### 1.0
 * The initial release.
