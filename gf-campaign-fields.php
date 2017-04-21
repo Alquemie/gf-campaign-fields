@@ -217,7 +217,7 @@ class AqGFCampaignAddOn extends GFAddOn {
 		$mediumqs = $this->get_plugin_setting('aq_campaign_medium');
 		$termqs = $this->get_plugin_setting('aq_campaign_term');
 		$contentqs = $this->get_plugin_setting('aq_campaign_content');
-		$matchtypeqs = $campaign->get_plugin_setting('aq_matchtype');
+		$matchtypeqs = $this->get_plugin_setting('aq_matchtype');
 		$mkwidqs = $this->get_plugin_setting('aq_marin_kwid');
 		$pcridqs = $this->get_plugin_setting('aq_marin_pcrid');
 
