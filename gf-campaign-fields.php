@@ -284,14 +284,23 @@ class AqGFCampaignAddOn extends GFAddOn {
 		AqCampLast = {
 			"campaign": "seo",
 			"source": source.toLowerCase(),
-			"medium": "organic"
+			"medium": "organic",
+			"term": "",
+			"content": ""
 		};
 	}
 
-	AqCampLast.matchtype = AlquemieJS.getUrlParameter(AqMatchTypeQS);
-	AqCampLast.mkwid = AlquemieJS.getUrlParameter(AqMKWIDQS);
-	AqCampLast.pcrid = AlquemieJS.getUrlParameter(AqPCRIDQS);
-	AqCampLast.gclid = AlquemieJS.getUrlParameter('gclid');
+	var mtype = AlquemieJS.getUrlParameter(AqMatchTypeQS);
+	if (mtype != '' || (typeof AqCampLast.matchtype == 'undefined')) AqCampLast.matchtype = mtype;
+
+	var mkwid = AlquemieJS.getUrlParameter(AqMKWIDQS);
+	if (mkwid != '' || (typeof AqCampLast.mkwid == 'undefined')) AqCampLast.mkwid = mkwid;
+
+	var pcrid = AlquemieJS.getUrlParameter(AqPCRIDQS);
+	if (pcrid != '' || (typeof AqCampLast.pcrid == 'undefined')) AqCampLast.pcrid = pcrid;
+
+	var gclid = AlquemieJS.getUrlParameter('gclid');
+	if (gclid != '' || (typeof AqCampLast.gclid == 'undefined')) AqCampLast.gclid = gclid;
 
 	if (typeof AqCamp == 'undefined') {
 		AqCamp = AqCampLast;
@@ -328,8 +337,8 @@ class AqGFCampaignAddOn extends GFAddOn {
 
 	var marinfields = document.getElementsByClassName('gfield_aq_marin');
 	for( i = 0; i < marinfields.length; i++) {
-		document.getElementById(semfields[i].id + '_1').value = AqCampVals.mkwid;
-		document.getElementById(semfields[i].id + '_2').value = AqCampVals.pcrid;
+		document.getElementById(marinfields[i].id + '_1').value = AqCampVals.mkwid;
+		document.getElementById(marinfields[i].id + '_2').value = AqCampVals.pcrid;
 	}
 
 	if (typeof dataLayer != 'undefined') dataLayer.push(AqCampVals);
