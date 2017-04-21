@@ -359,7 +359,7 @@ class AqGFCampaignAddOn extends GFAddOn {
 					document.getElementById(deviceFields[i].id + "_3").value = deviceinfo.os.name;
 				};
 
-				if (typeof dataLayer != 'undefined') dataLayer.push("deviceType": deviceinfo.device.type, "deviceBrowser":deviceinfo.browser.name, "deviceOS": deviceinfo.os.name);
+				if (typeof dataLayer != 'undefined') dataLayer.push({"deviceType": deviceinfo.device.type, "deviceBrowser":deviceinfo.browser.name, "deviceOS": deviceinfo.os.name} );
 			} catch(e) {
 				alert(e);
 			}
