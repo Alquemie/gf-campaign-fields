@@ -3,7 +3,7 @@
   Plugin Name: Gravity Forms Campaign Fields
   Plugin URI: https://www.gravityaddons.com/
   Description: Creates new field types that are populated with Google Analytics campaign data
-  Version: 1.1.6
+  Version: 2.0
   Author: Alquemie
   Author URI: https://www.alquemie.net/
 */
@@ -12,24 +12,8 @@ if ( ! class_exists( 'GFForms' ) ) {
 	die();
 }
 
-define( 'GF_CAMPAIGN_FIELD_VERSION', '1.1.0' );
-define( 'GF_CAMPAIGN_FIELD_SLUG', 'alquemiegravityfields' );
-
-define( 'GF_CAMPAIGN_MERGETAG_DEVICETYPE', '{aq_device_type}');
-define( 'GF_CAMPAIGN_MERGETAG_DEVICEBROWSER', '{aq_device_browser}');
-define( 'GF_CAMPAIGN_MERGETAG_DEVICEOS', '{aq_device_os}');
-
-define( 'GF_CAMPAIGN_MERGETAG_SOURCE', '{aq_campaign_source}');
-define( 'GF_CAMPAIGN_MERGETAG_MEDIUM', '{aq_campaign_medium}');
-define( 'GF_CAMPAIGN_MERGETAG_NAME', '{aq_campaign_name}');
-define( 'GF_CAMPAIGN_MERGETAG_TERM', '{aq_campaign_term}');
-define( 'GF_CAMPAIGN_MERGETAG_CONTENT', '{aq_campaign_content}');
-
-define( 'GF_CAMPAIGN_MERGETAG_MKWID', '{aq_marin_kwid}');
-define( 'GF_CAMPAIGN_MERGETAG_PCRID', '{aq_pcrid}');
-define( 'GF_CAMPAIGN_MERGETAG_MATCHTYPE', '{aq_sem_matchtype}');
-define( 'GF_CAMPAIGN_MERGETAG_GLCID', '{aq_adwords_glcid}');
-
+define( 'GF_CAMPAIGN_FIELD_VERSION', '2.0' );
+define( 'GF_CAMPAIGN_FIELD_SLUG', 'alquemiegfcampaign' );
 
 include_once "class-gf-field-utm-values.php";
 include_once "class-gf-field-device-values.php";
@@ -52,7 +36,6 @@ class AqGFCampaignAddOn extends GFAddOn {
 
 	private static $_instance = null;
 
-
 	/**
 	 * Get an instance of this class.
 	 *
@@ -70,6 +53,10 @@ class AqGFCampaignAddOn extends GFAddOn {
 	 * Handles hooks and loading of language files.
 	 */
 	public function init() {
+		add_action('wp_head', array($this, 'whichbrowser'));
+		add_action('wp_head', array($this, 'set_campaign_parms'), 100 );
+		add_action('wp_footer', array($this, 'loadCampaignData'), 100);
+
 		parent::init();
 	}
 
@@ -103,6 +90,17 @@ class AqGFCampaignAddOn extends GFAddOn {
 						'tooltip'           => esc_html__( 'Campaign attribuition model determines if the campaign information is updated on return visits or if the original campaign is maintained', GF_CAMPAIGN_FIELD_SLUG ),
             'tooltip_class'     => 'tooltipclass',
 					),array(
+            'type'              => 'text',
+            'id'                => 'aq_cookie_lifetime',
+						'name'                => 'aq_cookie_lifetime',
+            'label'             => esc_html__( 'Cookie Lifetime (days)', GF_CAMPAIGN_FIELD_SLUG ),
+            'required'          => true,
+            'default_value'     => '30',
+            'class'             => 'medium',
+            'tooltip'           => esc_html__( 'The lifetime of the first touch campaign data.  This value is extended each time a visitor returns to the site.', GF_CAMPAIGN_FIELD_SLUG ),
+            'tooltip_class'     => 'tooltipclass',
+						'feedback_callback' => array( $this, 'validate_int' ),
+        ),array(
             'type'              => 'text',
             'id'                => 'aq_campaign_name',
 						'name'                => 'aq_campaign_name',
@@ -197,6 +195,181 @@ class AqGFCampaignAddOn extends GFAddOn {
 		);
 	}
 
+	public function whichbrowser() {
+		$mypath = plugins_url( 'includes/whichbrowser/server/detect.php', __FILE__ );
+	?>
+		<script>
+		(function(){var p=[],w=window,d=document,e=f=0;p.push('ua='+encodeURIComponent(navigator.userAgent));e|=w.ActiveXObject?1:0;e|=w.opera?2:0;e|=w.chrome?4:0;
+		e|='getBoxObjectFor' in d || 'mozInnerScreenX' in w?8:0;e|=('WebKitCSSMatrix' in w||'WebKitPoint' in w||'webkitStorageInfo' in w||'webkitURL' in w)?16:0;
+		e|=(e&16&&({}.toString).toString().indexOf("\\n")===-1)?32:0;p.push('e='+e);f|='sandbox' in d.createElement('iframe')?1:0;f|='WebSocket' in w?2:0;
+		f|=w.Worker?4:0;f|=w.applicationCache?8:0;f|=w.history && history.pushState?16:0;f|=d.documentElement.webkitRequestFullScreen?32:0;f|='FileReader' in w?64:0;
+		p.push('f='+f);p.push('r='+Math.random().toString(36).substring(7));p.push('w='+screen.width);p.push('h='+screen.height);var s=d.createElement('script');
+		s.src='<?php echo $mypath; ?>?' + p.join('&');d.getElementsByTagName('head')[0].appendChild(s);})();
+		</script>
+	<?php
+	}
+
+	public function set_campaign_parms() {
+
+		$attribution = $this->get_plugin_setting('aq_campaign_attribution');
+		$nameqs = $this->get_plugin_setting('aq_campaign_name');
+		$sourceqs = $this->get_plugin_setting('aq_campaign_source');
+		$mediumqs = $this->get_plugin_setting('aq_campaign_medium');
+		$termqs = $this->get_plugin_setting('aq_campaign_term');
+		$contentqs = $this->get_plugin_setting('aq_campaign_content');
+		$matchtypeqs = $campaign->get_plugin_setting('aq_matchtype');
+		$mkwidqs = $this->get_plugin_setting('aq_marin_kwid');
+		$pcridqs = $this->get_plugin_setting('aq_marin_pcrid');
+
+		$script = '<script>' . PHP_EOL;
+		$script .= "var AqAttribution = '{$attribution}';" . PHP_EOL;
+		$script .= "var AqCampaignQS = '{$nameqs}';" . PHP_EOL;
+		$script .= "var AqSourceQS =  '{$sourceqs}';" . PHP_EOL;
+		$script .= "var AqMediumQS = '{$mediumqs}';" . PHP_EOL;
+		$script .= "var AqTermQS = '{$termqs}';" . PHP_EOL;
+		$script .= "var AqContentQS = '{$contentqs}';" . PHP_EOL;
+		$script .= "var AqMatchTypeQS = '{$matchtypeqs}';" . PHP_EOL;
+		$script .= "var AqMKWIDQS = '{$mkwidqs}';" . PHP_EOL;
+		$script .= "var AqPCRIDQS = '{$pcridqs}';" . PHP_EOL;
+		$script .= '</script>' . PHP_EOL;
+		echo $script;
+
+	}
+
+	public function loadCampaignData() {
+		$cookieLife = ($this->get_plugin_setting('aq_cookie_lifetime'));
+		$cookieLife = ($cookieLife) ? $cookieLife : 30;
+	?>
+	<script>
+	const AlquemieJS = {
+		getUrlParameter: function (name) {
+			name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+			var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+			var results = regex.exec(location.search);
+			return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+		}
+	};
+
+	var AqCampLast = Cookies.getJSON('aqcamplast');
+	var AqCamp = Cookies.getJSON('aqcamp');
+
+	if (AlquemieJS.getUrlParameter(AqCampaignQS) != '') {
+		AqCampLast = {
+			"campaign": AlquemieJS.getUrlParameter(AqCampaignQS).toLowerCase(),
+			"source": AlquemieJS.getUrlParameter(AqSourceQS).toLowerCase(),
+			"medium": AlquemieJS.getUrlParameter(AqMediumQS).toLowerCase(),
+			"term": AlquemieJS.getUrlParameter(AqTermQS).toLowerCase(),
+			"content": AlquemieJS.getUrlParameter(AqContentQS).toLowerCase()
+		};
+	} else if (AlquemieJS.getUrlParameter('utm_campaign') != '') {
+		AqCampLast = {
+			"campaign": AlquemieJS.getUrlParameter('utm_campaign').toLowerCase(),
+			"source": AlquemieJS.getUrlParameter('utm_source').toLowerCase(),
+			"medium": AlquemieJS.getUrlParameter('utm_medium').toLowerCase(),
+			"term": AlquemieJS.getUrlParameter('utm_term').toLowerCase(),
+			"content": AlquemieJS.getUrlParameter('utm_content').toLowerCase()
+		};
+	} else if (typeof AqCampLast == 'undefined') {
+		var source = '';
+		try {
+			if (typeof document.referrer != 'undefined') {
+				var a=document.createElement('a');
+				a.href = document.referrer;
+				source = a.hostname;
+			}
+		} catch(e) {
+			source = '';
+		}
+
+		AqCampLast = {
+			"campaign": "seo",
+			"source": source.toLowerCase(),
+			"medium": "organic"
+		};
+	}
+
+	AqCampLast.matchtype = AlquemieJS.getUrlParameter(AqMatchTypeQS);
+	AqCampLast.mkwid = AlquemieJS.getUrlParameter(AqMKWIDQS);
+	AqCampLast.pcrid = AlquemieJS.getUrlParameter(AqPCRIDQS);
+	AqCampLast.gclid = AlquemieJS.getUrlParameter('gclid');
+
+	if (typeof AqCamp == 'undefined') {
+		AqCamp = AqCampLast;
+	}
+
+	Cookies.set('aqcamplast', AqCampLast);
+	Cookies.set('aqcamp', AqCamp, { expires: <?php echo $cookieLife; ?> });
+
+	AqAttribution = (typeof AqAttribution == 'undefined') ? 'last' : AqAttribution;
+
+	if (AqAttribution == 'first') {
+		AqCampVals = AqCamp;
+	} else {
+		AqCampVals = AqCampLast;
+	}
+
+	var whichURL = document.URL.substr(0,document.URL.lastIndexOf('/')) + '/includes/whichbrowser/server/detect.php';
+
+	var i;
+	var utmfields = document.getElementsByClassName('gfield_aq_campaign');
+	for( i = 0; i < utmfields.length; i++) {
+		document.getElementById(utmfields[i].id + '_3').value = AqCampVals.campaign;
+		document.getElementById(utmfields[i].id + '_1').value = AqCampVals.source;
+		document.getElementById(utmfields[i].id + '_2').value = AqCampVals.medium;
+		document.getElementById(utmfields[i].id + '_4').value = AqCampVals.term;
+		document.getElementById(utmfields[i].id + '_5').value = AqCampVals.content;
+	}
+
+	var semfields = document.getElementsByClassName('gfield_aq_sem');
+	for( i = 0; i < semfields.length; i++) {
+		document.getElementById(semfields[i].id + '_1').value = AqCampVals.matchtype;
+		document.getElementById(semfields[i].id + '_2').value = AqCampVals.gclid;
+	}
+
+	var marinfields = document.getElementsByClassName('gfield_aq_marin');
+	for( i = 0; i < marinfields.length; i++) {
+		document.getElementById(semfields[i].id + '_1').value = AqCampVals.mkwid;
+		document.getElementById(semfields[i].id + '_2').value = AqCampVals.pcrid;
+	}
+
+	if (typeof dataLayer != 'undefined') dataLayer.push(AqCampVals);
+
+	function waitForWhichBrowser(cb) {
+		var callback = cb;
+
+		function wait() {
+			if (typeof WhichBrowser == 'undefined')
+				window.setTimeout(wait, 100)
+			else
+				callback();
+		}
+
+		wait();
+	}
+	document.addEventListener("DOMContentLoaded", function(event) {
+		waitForWhichBrowser(function() {
+
+			try {
+				deviceinfo = new WhichBrowser();
+
+				var deviceFields = document.getElementsByClassName('gfield_aq_deviceinfo');
+				for( var i = 0; i < deviceFields.length; i++) {
+					document.getElementById(deviceFields[i].id + "_1").value = deviceinfo.device.type;
+					document.getElementById(deviceFields[i].id + "_2").value = deviceinfo.browser.name;
+					document.getElementById(deviceFields[i].id + "_3").value = deviceinfo.os.name;
+				};
+
+				if (typeof dataLayer != 'undefined') dataLayer.push("deviceType": deviceinfo.device.type, "deviceBrowser":deviceinfo.browser.name, "deviceOS": deviceinfo.os.name);
+			} catch(e) {
+				alert(e);
+			}
+		});
+	});
+	</script>
+	<?php
+
+	}
+
 	/**
 	 * Determine if value does NOT contain white space character(s)
 	 * @param  string  $value
@@ -204,6 +377,15 @@ class AqGFCampaignAddOn extends GFAddOn {
 	 */
 	public function no_whitespace( $value ) {
 		return (!preg_match('/\s+/', $value) && ($value !== ''));
+	}
+
+	/**
+	 * Determine if value is number
+	 * @param  string  $value
+	 * @return boolean
+	 */
+	public function validate_int( $value ) {
+    return (preg_match('/^[1-9][0-9]*$/', $value) === 1);
 	}
 }
 
@@ -219,7 +401,6 @@ if ( ! class_exists( 'AQ_Campaign_AddOn_Bootstrap' ) ) :
         if ( ! method_exists( 'GFForms', 'include_feed_addon_framework' ) ) {
             return;
         }
-        // require_once( 'class-gfvelocifyaddon.php' );
         GFAddOn::register( 'AqGFCampaignAddOn' );
     }
 
@@ -231,55 +412,8 @@ function gf_campaign_addon() {
     return AqGFCampaignAddOn::get_instance();
 }
 
-function aq_capture_campaign_values() {
-?>
-<script>
-	var AqGfCampaignData = {
-		getUrlParameter: function (name) {
-			name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-			var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-			var results = regex.exec(location.search);
-			return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-		},
-		setCookie: function (cname, cvalue) {
-		    var d = new Date();
-		    d.setTime(d.getTime() + (30*24*60*60*1000));
-		    var expires = "expires="+ d.toUTCString();
-		    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-		},
-		getCookie: function (cname) {
-	    var name = cname + "=";
-	    var decodedCookie = decodeURIComponent(document.cookie);
-	    var ca = decodedCookie.split(';');
-	    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-        	c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-        	return c.substring(name.length, c.length);
-        }
-	    }
-	    return '';
-		}
-	};
-</script>
-    <?php
-}
 
-function aq_include_whichbrowser() {
-	$mypath = plugins_url( 'includes/whichbrowser/server/detect.php', __FILE__ );
-?>
-	<script>
-	(function(){var p=[],w=window,d=document,e=f=0;p.push('ua='+encodeURIComponent(navigator.userAgent));e|=w.ActiveXObject?1:0;e|=w.opera?2:0;e|=w.chrome?4:0;
-	e|='getBoxObjectFor' in d || 'mozInnerScreenX' in w?8:0;e|=('WebKitCSSMatrix' in w||'WebKitPoint' in w||'webkitStorageInfo' in w||'webkitURL' in w)?16:0;
-	e|=(e&16&&({}.toString).toString().indexOf("\\n")===-1)?32:0;p.push('e='+e);f|='sandbox' in d.createElement('iframe')?1:0;f|='WebSocket' in w?2:0;
-	f|=w.Worker?4:0;f|=w.applicationCache?8:0;f|=w.history && history.pushState?16:0;f|=d.documentElement.webkitRequestFullScreen?32:0;f|='FileReader' in w?64:0;
-	p.push('f='+f);p.push('r='+Math.random().toString(36).substring(7));p.push('w='+screen.width);p.push('h='+screen.height);var s=d.createElement('script');
-	s.src='<?php echo $mypath; ?>?' + p.join('&');d.getElementsByTagName('head')[0].appendChild(s);})();
-	</script>
-<?php
-}
-add_action('wp_head', 'aq_include_whichbrowser');
 
-wp_enqueue_script( 'aq_campaign_js', plugins_url( 'gf-campaigns.js', __FILE__ ), null, null, true );
+// wp_enqueue_script( 'aq_campaign_js', plugins_url( 'gf-campaigns.js', __FILE__ ), null, null, true );
+wp_enqueue_script( 'aq_js_cookie', plugins_url( 'js/js.cookie.min.js', __FILE__ ), null, null, true );
+// wp_enqueue_script( 'aq_campaign_js', plugins_url( 'gf-loadcamp.js', __FILE__ ), null, null, true );

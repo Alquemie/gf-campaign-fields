@@ -31,8 +31,7 @@ class GF_Field_SEM_Values extends GF_Field {
 
 	public function __construct( $data = array() ) {
 		parent::__construct($data);
-		// add_action('wp_footer', array($this, 'check_sem_values'), 50 );
-		add_action('wp_head', array($this, 'set_sem_parms'), 100 );
+
 	}
 
 	public function get_form_editor_button()
@@ -438,16 +437,6 @@ class GF_Field_SEM_Values extends GF_Field {
 		$script .= "});" . PHP_EOL;
 		$script .= '</script>' . PHP_EOL;
 
-		echo $script;
-	}
-
-	public function set_sem_parms() {
-		$campaign = gf_campaign_addon();
-		$matchtypeqs = $campaign->get_plugin_setting('aq_matchtype');
-
-		$script = '<script>' . PHP_EOL;
-		$script .= "var AqMatchTypeQS = '{$matchtypeqs}';" . PHP_EOL;
-		$script .= '</script>' . PHP_EOL;
 		echo $script;
 	}
 

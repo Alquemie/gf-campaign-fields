@@ -34,8 +34,6 @@ class GF_Field_UTM_Values extends GF_Field {
 
 	public function __construct( $data = array() ) {
 		parent::__construct($data);
-		// add_action('wp_footer', array($this, 'check_utm_values'), 50 );
-		add_action('wp_head', array($this, 'set_campaign_parms'), 100 );
 	}
 
 	public function get_form_editor_button()
@@ -514,26 +512,6 @@ class GF_Field_UTM_Values extends GF_Field {
 		$script .= "  if (AqTerm != '') { document.getElementById(utmfields[i].id + \"_4\").value = AqTerm.toLowerCase(); }" . PHP_EOL;
 		$script .= "  if (AqContent != '') { document.getElementById(utmfields[i].id + \"_5\").value = AqContent.toLowerCase(); }" . PHP_EOL;
 		$script .= "});" . PHP_EOL;
-		$script .= '</script>' . PHP_EOL;
-		echo $script;
-	}
-
-	public function set_campaign_parms() {
-		$campaign = gf_campaign_addon();
-		$attribution = $campaign->get_plugin_setting('aq_campaign_attribution');
-		$nameqs = $campaign->get_plugin_setting('aq_campaign_name');
-		$sourceqs = $campaign->get_plugin_setting('aq_campaign_source');
-		$mediumqs = $campaign->get_plugin_setting('aq_campaign_medium');
-		$termqs = $campaign->get_plugin_setting('aq_campaign_term');
-		$contentqs = $campaign->get_plugin_setting('aq_campaign_content');
-
-		$script = '<script>' . PHP_EOL;
-		$script .= "var AqAttribution = '{$attribution}';" . PHP_EOL;
-		$script .= "var AqCampaignQS = '{$nameqs}';" . PHP_EOL;
-		$script .= "var AqSourceQS =  '{$sourceqs}';" . PHP_EOL;
-		$script .= "var AqMediumQS = '{$mediumqs}';" . PHP_EOL;
-		$script .= "var AqTermQS = '{$termqs}';" . PHP_EOL;
-		$script .= "var AqContentQS = '{$contentqs}';" . PHP_EOL;
 		$script .= '</script>' . PHP_EOL;
 		echo $script;
 	}

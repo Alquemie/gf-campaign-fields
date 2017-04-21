@@ -1,5 +1,5 @@
 <?php
-	
+
 	// Installed by Composer as a project
 	if (file_exists('vendor/autoload.php')) {
 		include_once 'vendor/autoload.php';
@@ -10,7 +10,7 @@
 		include_once __DIR__ . '/../../autoload.php';
 	}
 
-    // Local development directory
-    elseif (file_exists(__DIR__ . '/../Parser/bootstrap.php')) {
-        include_once __DIR__ . '/../Parser/bootstrap.php';
-    }
+  // Local development directory
+  elseif (file_exists(__DIR__ . '/../parser/bootstrap.php')) {
+      include_once __DIR__ . '/../parser/bootstrap.php';
+  }

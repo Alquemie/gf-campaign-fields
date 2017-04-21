@@ -35,6 +35,14 @@ No, you must purchase your own license of Gravity Forms
 
 ## Changelog
 
+### 2.0
+* Added JS-Cookie library
+* Refactored Campaign data storage
+* Added config for Cookie Lifetime
+* Improved first / last touch attribution capabilities
+* Fixed WhichBrowser 500 error
+* Added Google Tag Manger capabilities
+ 
 ### 1.1.6
 * Configuration Error fix
 

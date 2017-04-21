@@ -16,7 +16,6 @@ class AqGF_Marin extends GF_Field {
 
 		public function __construct( $data = array() ) {
 			parent::__construct($data);
-			add_action('wp_head', array($this, 'set_marin_parms'), 100 );
 		}
 
 		public function get_form_editor_field_title() {
@@ -334,18 +333,6 @@ class AqGF_Marin extends GF_Field {
 			$script .= "});" . PHP_EOL;
 			$script .= '</script>' . PHP_EOL;
 
-			echo $script;
-		}
-
-		public function set_marin_parms() {
-			$campaign = gf_campaign_addon();
-			$mkwidqs = $campaign->get_plugin_setting('aq_marin_kwid');
-			$pcridqs = $campaign->get_plugin_setting('aq_marin_pcrid');
-
-			$script = '<script>' . PHP_EOL;
-			$script .= "var AqMKWIDQS = '{$mkwidqs}';" . PHP_EOL;
-			$script .= "var AqPCRIDQS = '{$pcridqs}';" . PHP_EOL;
-			$script .= '</script>' . PHP_EOL;
 			echo $script;
 		}
 
