@@ -5,11 +5,6 @@ if ( ! class_exists( 'GFForms' ) ) {
 	die();
 }
 
-/* Field names */
-
-$matchType = '';
-$glcid = '';
-
 /**
  * Class GF_Field_Name
  *
@@ -17,7 +12,7 @@ $glcid = '';
  *
  * @since Unknown
  */
-class GF_Field_SEM_Values extends GF_Field {
+class GF_Field_HiddenGroup extends GF_Field {
 
 	/**
 	 * Sets the field type.
@@ -27,11 +22,11 @@ class GF_Field_SEM_Values extends GF_Field {
 	 *
 	 * @var string The type of field.
 	 */
-	public $type = 'aq_gf_sem_field';
+	public $type = 'aqHiddenGroup';
 
 	public function __construct( $data = array() ) {
+		$data['visibility'] = 'visible';
 		parent::__construct($data);
-
 	}
 
 	public function get_form_editor_button()
@@ -40,21 +35,6 @@ class GF_Field_SEM_Values extends GF_Field {
 					'group' => 'advanced_fields',
 					'text'  => $this->get_form_editor_field_title()
 			);
-	}
-
-	/**
-	 * Sets the field title of the Name field.
-	 *
-	 * @since  Unknown
-	 * @access public
-	 *
-	 * @used-by GFCommon::get_field_type_title()
-	 * @used-by GF_Field::get_form_editor_button()
-	 *
-	 * @return string
-	 */
-	public function get_form_editor_field_title() {
-		return esc_attr__( 'SEM Values', GF_CAMPAIGN_FIELD_SLUG );
 	}
 
 	/**
@@ -69,7 +49,7 @@ class GF_Field_SEM_Values extends GF_Field {
 	 * @return bool true
 	 */
 	public function is_conditional_logic_supported() {
-		return true;
+		return false;
 	}
 
 
@@ -99,7 +79,6 @@ class GF_Field_SEM_Values extends GF_Field {
 	function get_form_editor_field_settings() {
 		return array(
 			'label_setting',
-
 		);
 	}
 
@@ -107,20 +86,17 @@ class GF_Field_SEM_Values extends GF_Field {
 		$this->inputs = array(
 				array(
 					'id'           => $this->id . '.1',
-					'title'        => esc_html__( 'Match Type', GF_CAMPAIGN_FIELD_SLUG ),
-					'label'			=> esc_html__( 'Match Type', GF_CAMPAIGN_FIELD_SLUG ),
-					'default_value' => array('aliases' => GF_CAMPAIGN_MERGETAG_MATCHTYPE),
+					'label'        => esc_html__( 'Hidden Value', GF_CAMPAIGN_FIELD_SLUG ),
+					'name'	=> 'aqHidden1',
 
 				),
 				array(
 					'id'           => $this->id . '.2',
-					'title'        => esc_html__( 'GLCID', GF_CAMPAIGN_FIELD_SLUG ),
-					'label'			=> esc_html__( 'GLCID', GF_CAMPAIGN_FIELD_SLUG ),
-					'default_value' => array('aliases' => GF_CAMPAIGN_MERGETAG_GLCID),
+					'label'        => esc_html__( 'Hidden Value', GF_CAMPAIGN_FIELD_SLUG ),
+					'name'	=> 'aqHidden2',
 				),
 
 			);
-
 		return $this->inputs;
 	}
 
@@ -161,44 +137,26 @@ class GF_Field_SEM_Values extends GF_Field {
 		$field_id = $is_admin || $form_id == 0 ? "input_$id" : 'input_' . $form_id . "_$id";
 		$form_id  = ( $is_admin ) && empty( $form_id ) ? rgget( 'id' ) : $form_id;
 
-		$size         = $this->size;
-		$disabled_text = $is_form_editor ? "disabled='disabled'" : '';
-		$class_suffix = ($is_entry_detail) ? '_admin' : '';
-		$field_type  =  ($is_form_editor) ? 'text' : 'hidden';
+		$value        = esc_attr( $value );
+		$field_type         = $is_entry_detail || $is_form_editor ? 'text' : 'hidden';
+		$class_attribute    = $is_entry_detail || $is_form_editor ? '' : "class='gform_hidden'";
+		$class_suffix  = $is_entry_detail ? '_admin' : '';
 
-		$matchType = '';
-		$glcid  = '';
+		$disabled_text         = $is_form_editor ? 'disabled="disabled"' : '';
 
-		if ( is_array( $value ) ) {
-			$matchType =  esc_attr( GFForms::get( $this->id . '.1', $value ) );
-			$glcid =  esc_attr( GFForms::get( $this->id . '.2', $value ) );
+		$field_markup = '';
+		$inputs = $this->get_entry_inputs();
+		foreach ($inputs as $field) {
+			$input = GFFormsModel::get_input( $this, $field['id'] );
+			$fieldID = str_replace('.','_',$field['id']);
+			$style = ( $is_admin && rgar( $input, 'isHidden' ) ) ? "style='display:none;'" : '';
+
+			if ( $is_admin || ! rgar( $input, 'isHidden' ) ) {
+				$field_markup .= "<input type='{$field_type}' name='input_" . $field['id'] . "' id='input_{$form_id}_{$fieldID}' value='" . esc_attr( GFForms::get( $field['id'] , $value ) ) . "' placeholder='" . $field['label'] . "' {$class_attribute} {$disabled_text} />";
+			}
 		}
 
-		$matchType_input = GFFormsModel::get_input( $this, $this->id . '.1' );
-		$glcid_input = GFFormsModel::get_input( $this, $this->id . '.2' );
-
-		$matchType_label  = esc_attr__( 'Match Type', GF_CAMPAIGN_FIELD_SLUG );
-		$glcid_label  = esc_attr__( 'GLCID', GF_CAMPAIGN_FIELD_SLUG );
-
-		$style = ( $is_admin && rgar( $matchType_input, 'isHidden' ) ) ? "style='display:none;'" : '';
-		if ( $is_admin || ! rgar( $matchType_input, 'isHidden' ) ) {
-			$mt_markup = "<span id='{$field_id}_1_container' {$style}>
-	      <input type='{$field_type}' name='input_{$id}.1' id='{$field_id}_1' value='" . $matchType ."' placeholder='{$matchType_label}' {$disabled_text} />
-      </span>";
-		}
-
-		$style = ( $is_admin && rgar( $glcid_input, 'isHidden' ) ) ? "style='display:none;'" : '';
-		if ( $is_admin || ! rgar( $glcid_input, 'isHidden' ) ) {
-			$glcid_markup = "<span id='{$field_id}_2_container' {$style}>
-	      <input type='{$field_type}' name='input_{$id}.2' id='{$field_id}_2' value='" . $glcid . "' placeholder='{$glcid_label}' {$disabled_text} />
-      </span>";
-		}
-
-		return "<div class='ginput_complex{$class_suffix} ginput_container gfield_aq_sem' id='{$field_id}'>
-        {$mt_markup}
-				{$glcid_markup}
-    </div>";
-
+		return "<div class='ginput_complex{$class_suffix} ginput_container gfield_{$this->type}' id='{$field_id}'>{$field_markup}</div>";
 	}
 
 	/**
@@ -212,7 +170,7 @@ class GF_Field_SEM_Values extends GF_Field {
 	 * @return string The CSS class.
 	 */
 	public function get_field_label_class() {
-		return 'gfield_label gfield_label_before_sem';
+		return 'gfield_label gfield_label_before_campaign';
 	}
 
 	/**
@@ -226,7 +184,7 @@ class GF_Field_SEM_Values extends GF_Field {
 	 *
 	 * @return string
 	 */
-	public function get_field_content( $value, $force_frontend_label, $form ) {
+	/* public function get_field_content( $value, $force_frontend_label, $form ) {
 
 		$field_label = $this->get_field_label( $force_frontend_label, $value );
 
@@ -262,7 +220,19 @@ class GF_Field_SEM_Values extends GF_Field {
 
 		return $field_content;
 	}
+*/
+public function get_field_content( $value, $force_frontend_label, $form ) {
+	$form_id         = $form['id'];
+	$admin_buttons   = $this->get_admin_buttons();
+	$is_entry_detail = $this->is_entry_detail();
+	$is_form_editor  = $this->is_form_editor();
+	$is_admin        = $is_entry_detail || $is_form_editor;
+	$field_label     = $this->get_field_label( $force_frontend_label, $value );
+	$field_id        = $is_admin || $form_id == 0 ? "input_{$this->id}" : 'input_' . $form_id . "_{$this->id}";
+	$field_content   = ! $is_admin ? '{FIELD}' : $field_content = sprintf( "%s<label class='gfield_label' for='%s'>%s</label>{FIELD}", $admin_buttons, $field_id, esc_html( $field_label ) );
 
+	return $field_content;
+}
 	/**
 	 * Gets the field value to be displayed on the entry detail page.
 	 *
@@ -281,14 +251,15 @@ class GF_Field_SEM_Values extends GF_Field {
 	 * @return array|string The value to be displayed on the entry detail page.
 	 */
 	public function get_value_entry_detail( $value, $currency = '', $use_text = false, $format = 'html', $media = 'screen' ) {
+
 		if ( is_array( $value ) ) {
-			$matchType = trim( rgget( $this->id . '.1', $value ) );
-			$glcid = trim( rgget( $this->id . '.2', $value ) );
+
+			foreach ($this->inputs as $fieldval) {
+				$tempValue =  trim( rgget( $fieldval['id'], $value ) );
+				$vals[$fieldval['id']] = ( $format === 'html' ) ? esc_html($tempValue) : $tempValue ;
+			}
 
 			if ( $format === 'html' ) {
-				$matchType = esc_html( $matchType );
-				$glcid = esc_html( $glcid );
-
 				$line_break = '<br />';
 				$pre_label = '<b>';
 				$post_label = '</b>';
@@ -297,9 +268,12 @@ class GF_Field_SEM_Values extends GF_Field {
 				$pre_label = $post_label = '';
 			}
 
-			$return = ! empty( $matchType) ? $pre_label . '- Match Type: ' . $post_label . $matchType : '';
-			$return .= ! empty( $return ) && ! empty( $glcid ) ? $line_break : '';
-			$return .= ! empty( $glcid) ? $pre_label . '- GLCID: ' . $post_label . $glcid : '';
+			$return = "";
+			foreach ($this->inputs as $fieldval) {
+				$theValue = $vals[$fieldval['id']];
+				$return .= ! empty( $return ) && ! empty( $theValue ) ? $line_break : '';
+				$return .= ! empty( $theValue) ? $pre_label . "- " . $fieldval['label'] . ": " . $post_label . $theValue : '';
+			}
 		} else {
 			$return = "NO ARRAY" . $value;
 		}
@@ -380,12 +354,11 @@ class GF_Field_SEM_Values extends GF_Field {
 				return $name;
 			}
 
-			// Complex field (multiple inputs). Join all pieces and create name.
-			$matchType = trim( rgar( $entry, $input_id . '.1' ) );
-			$glcid = trim( rgar( $entry, $input_id . '.2' ) );
-
-			$calcresult = $matchType;
-			$calcresult .= ! empty( $glcid ) && ! empty( $glcid ) ? ' ' . $glcid : $glcid;
+			$calcresult = '';
+			foreach ($this->inputs as $fieldval) {
+				$val = trim( rgar( $entry, $fieldval['id'] ) );
+				$calcresult .= ! empty( $calcresult ) && ! empty( $val ) ? ' ' . $val : $val;
+			}
 
 			return $calcresult;
 		} else {
@@ -393,6 +366,7 @@ class GF_Field_SEM_Values extends GF_Field {
 			return rgar( $entry, $input_id );
 		}
 	}
+
 
 	/**
 	 * Returns the field admin buttons for display in the form editor.
@@ -402,8 +376,8 @@ class GF_Field_SEM_Values extends GF_Field {
 	public function get_admin_buttons() {
 
 		$duplicate_field_link = '';
-
 		$delete_field_link = "<a class='field_delete_icon' id='gfield_delete_{$this->id}' title='" . esc_attr__( 'click to delete this field', 'gravityforms' ) . "' href='#' onclick='DeleteField(this); return false;' onkeypress='DeleteField(this); return false;'><i class='fa fa-times fa-lg'></i></a>";
+
 		$delete_field_link = apply_filters( 'gform_delete_field_link', $delete_field_link );
 		$field_type_title  = esc_html( GFCommon::get_field_type_title( $this->type ) );
 
@@ -416,64 +390,8 @@ class GF_Field_SEM_Values extends GF_Field {
 		return $admin_buttons;
 	}
 
-	/**
-	 * Returns the scripts to be included for this field type in the form editor.
-	 *
-	 * @return string
-	 */
-	public function get_form_inline_script_on_page_render($form) {
-		//add_action('wp_footer', array($this, 'add_sem_values'), 100 );
-
-		return '';
-	}
-
-	public function add_sem_values() {
-		// Insert JS for campaigns based on settings
-		$script = '<script>' . PHP_EOL;
-		$script .= "var semfields = document.getElementsByClassName('gfield_aq_sem');" . PHP_EOL;
-		$script .= "for( var i = 0; i < semfields.length; i++) {" . PHP_EOL;
-		$script .= "  if (AqMatchType != '') { document.getElementById(semfields[i].id + \"_1\").value = AqMatchType.toLowerCase(); }" . PHP_EOL;
-		$script .= "  if (AqGLCID != '') { document.getElementById(semfields[i].id + \"_2\").value = AqGLCID; }" . PHP_EOL;
-		$script .= "});" . PHP_EOL;
-		$script .= '</script>' . PHP_EOL;
-
-		echo $script;
-	}
-
-	public function check_sem_values() {
-		// Insert JS for campaigns based on settings
-		$script = '<script>' . PHP_EOL;
-
-		$campaign = gf_campaign_addon();
-		$attribution = $campaign->get_plugin_setting('aq_campaign_attribution');
-		$matchtypeqs = $campaign->get_plugin_setting('aq_matchtype');
-
-		$script .= "var AqMatchType = '';" . PHP_EOL;
-		$script .= "var AqGLCID =  '';" . PHP_EOL;
-
-		if ($attribution == 'first') {
-			//Check if Cookie
-			$script .= "AqMatchType = (AqGfCampaignData.getCookie('aq_matchtype') != '') ? AqGfCampaignData.getCookie('aq_matchtype') : '';" . PHP_EOL;
-			$script .= "AqGLCID = (AqGfCampaignData.getCookie('aq_glcid') != '') ? AqGfCampaignData.getCookie('aq_glcid') : '';" . PHP_EOL;
-		}
-
-		$script .= "if (AqMatchType == '') { AqMatchType = (AqGfCampaignData.getUrlParameter('{$matchtypeqs}') != '') ? AqGfCampaignData.getUrlParameter('{$matchtypeqs}') : ''; }" . PHP_EOL;
-		$script .= "if (AqGLCID == '') { AqGLCID = (AqGfCampaignData.getUrlParameter('glcid') != '') ? AqGfCampaignData.getUrlParameter('glcid') : ''; }" . PHP_EOL;
-
-		if ($attribution != 'first') {
-			//Check if Cookie
-			$script .= "if (AqMatchType == '') { AqMatchType = (AqGfCampaignData.getCookie('aq_matchtype') != '') ? AqGfCampaignData.getCookie('aq_matchtype') : ''; }" . PHP_EOL;
-			$script .= "if (AqGLCID == '') { AqGLCID = (AqGfCampaignData.getCookie('aq_glcid') != '') ? AqGfCampaignData.getCookie('aq_glcid') : ''; }" . PHP_EOL;
-		}
-
-		$script .= "if (AqMatchType != '') { AqGfCampaignData.setCookie('aq_matchtype', AqMatchType);  }" . PHP_EOL;
-		$script .= "if (AqGLCID != '') { AqGfCampaignData.setCookie('aq_glcid', AqGLCID); }" . PHP_EOL;
-
-		$script .= '</script>' . PHP_EOL;
-		echo $script;
-	}
 
 }
 
 // Registers the Name field with the field framework.
-GF_Fields::register( new GF_Field_SEM_Values() );
+// GF_Fields::register( new GF_Field_GoogleAnalytics_Values() );

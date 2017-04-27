@@ -3,7 +3,7 @@
   Plugin Name: Gravity Forms Campaign Fields
   Plugin URI: https://www.gravityaddons.com/
   Description: Creates new field types that are populated with Google Analytics campaign data
-  Version: 2.0
+  Version: 2.1
   Author: Alquemie
   Author URI: https://www.alquemie.net/
 */
@@ -12,13 +12,15 @@ if ( ! class_exists( 'GFForms' ) ) {
 	die();
 }
 
-define( 'GF_CAMPAIGN_FIELD_VERSION', '2.0' );
+define( 'GF_CAMPAIGN_FIELD_VERSION', '2.1' );
 define( 'GF_CAMPAIGN_FIELD_SLUG', 'alquemiegfcampaign' );
 
-include_once "class-gf-field-utm-values.php";
-include_once "class-gf-field-device-values.php";
-include_once "class-gf-field-sem-values.php";
-include_once "class-gf-field-marin-values.php";
+include_once "classes/class-gf-field-hiddengroup.php";
+include_once "classes/class-gf-field-googleanalytics.php";
+include_once "classes/class-gf-field-deviceinfo.php";
+include_once "classes/class-gf-field-sem.php";
+include_once "classes/class-gf-field-marin.php";
+include_once "classes/class-gf-field-analyticsuserid.php";
 
 GFForms::include_feed_addon_framework();
 /**
@@ -270,21 +272,25 @@ class AqGFCampaignAddOn extends GFAddOn {
 			"content": AlquemieJS.getUrlParameter('utm_content').toLowerCase()
 		};
 	} else if (typeof AqCampLast == 'undefined') {
-		var source = '';
+		var source = campaign = '';
 		try {
 			if (typeof document.referrer != 'undefined') {
 				var a=document.createElement('a');
 				a.href = document.referrer;
-				source = a.hostname;
 			}
+			if (a.hostname != location.hostname) {
+				source = a.hostname;
+				campaign = 'seo';
+			}
+
 		} catch(e) {
-			source = '';
+			console.log(e.message);
 		}
 
 		AqCampLast = {
-			"campaign": "seo",
+			"campaign": campaign,
 			"source": source.toLowerCase(),
-			"medium": "organic",
+			"medium": "",
 			"term": "",
 			"content": ""
 		};
@@ -320,7 +326,7 @@ class AqGFCampaignAddOn extends GFAddOn {
 	var whichURL = document.URL.substr(0,document.URL.lastIndexOf('/')) + '/includes/whichbrowser/server/detect.php';
 
 	var i;
-	var utmfields = document.getElementsByClassName('gfield_aq_campaign');
+	var utmfields = document.getElementsByClassName('gfield_aqGoogleAnalytics');
 	for( i = 0; i < utmfields.length; i++) {
 		document.getElementById(utmfields[i].id + '_3').value = AqCampVals.campaign;
 		document.getElementById(utmfields[i].id + '_1').value = AqCampVals.source;
@@ -329,13 +335,13 @@ class AqGFCampaignAddOn extends GFAddOn {
 		document.getElementById(utmfields[i].id + '_5').value = AqCampVals.content;
 	}
 
-	var semfields = document.getElementsByClassName('gfield_aq_sem');
+	var semfields = document.getElementsByClassName('gfield_aqSEM');
 	for( i = 0; i < semfields.length; i++) {
 		document.getElementById(semfields[i].id + '_1').value = AqCampVals.matchtype;
 		document.getElementById(semfields[i].id + '_2').value = AqCampVals.gclid;
 	}
 
-	var marinfields = document.getElementsByClassName('gfield_aq_marin');
+	var marinfields = document.getElementsByClassName('gfield_aqMarin');
 	for( i = 0; i < marinfields.length; i++) {
 		document.getElementById(marinfields[i].id + '_1').value = AqCampVals.mkwid;
 		document.getElementById(marinfields[i].id + '_2').value = AqCampVals.pcrid;
@@ -361,7 +367,7 @@ class AqGFCampaignAddOn extends GFAddOn {
 			try {
 				deviceinfo = new WhichBrowser();
 
-				var deviceFields = document.getElementsByClassName('gfield_aq_deviceinfo');
+				var deviceFields = document.getElementsByClassName('gfield_aqDeviceInfo');
 				for( var i = 0; i < deviceFields.length; i++) {
 					document.getElementById(deviceFields[i].id + "_1").value = deviceinfo.device.type;
 					document.getElementById(deviceFields[i].id + "_2").value = deviceinfo.browser.name;
