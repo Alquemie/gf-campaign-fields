@@ -14,6 +14,7 @@ The plugin currently supports:
 * Google AdWords (GCLID and MatchType)
 * Device Information (browser, OS, device type)
 * Marin (KWID and Creative ID)
+* Google Analytics Client ID
 
 ## Installation
 
@@ -35,6 +36,11 @@ No, you must purchase your own license of Gravity Forms
 
 ## Changelog
 
+### 2.1
+* Refactored code to used GF_Field_HiddenGroup class
+* Moved dependancies to "lib" folder
+* Added Google Analytics Client ID field
+
 ### 2.0
 * Added JS-Cookie library
 * Refactored Campaign data storage
@@ -42,7 +48,7 @@ No, you must purchase your own license of Gravity Forms
 * Improved first / last touch attribution capabilities
 * Fixed WhichBrowser 500 error
 * Added Google Tag Manger capabilities
- 
+
 ### 1.1.6
 * Configuration Error fix
 

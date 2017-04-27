@@ -4,7 +4,7 @@
     "authors": [
         {
             "name": "Chris Carrel",
-            "email": "chris@alquemie.net"
+            "email": "plugins@alquemie.net"
         }
     ],
     "homepage": "https://www.gravityaddons.com",
@@ -15,6 +15,6 @@
       "whichbrowser/server": "v2.0.12"
     },
     "config": {
-        "vendor-dir": "includes"
+        "vendor-dir": "lib"
     }
 }

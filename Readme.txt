@@ -3,7 +3,7 @@ Contributors: alquemie
 Tags: gravity forms, google analytics, marketing
 Requires at least: 4.0
 Tested up to: 4.7.3
-Stable tag: 2.0
+Stable tag: 2.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -21,6 +21,7 @@ The plugin currently supports:
 * Google AdWords (GCLID and MatchType)
 * Device Information (browser, OS, device type)
 * Marin (KWID and Creative ID)
+* Google Analytics Client ID
 
 == Installation ==
 
@@ -41,6 +42,11 @@ No, you must purchase your own license of Gravity Forms
 2. Building a form that contains campaign fields
 
 == Changelog ==
+
+= 2.1 =
+* Refactored code to used GF_Field_HiddenGroup class
+* Moved dependancies to "lib" folder
+* Added Google Analytics Client ID field
 
 = 2.0 =
 * Added JS-Cookie library

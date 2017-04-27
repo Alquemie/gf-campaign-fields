@@ -198,7 +198,7 @@ class AqGFCampaignAddOn extends GFAddOn {
 	}
 
 	public function whichbrowser() {
-		$mypath = plugins_url( 'includes/whichbrowser/server/detect.php', __FILE__ );
+		$mypath = plugins_url( 'lib/whichbrowser/server/detect.php', __FILE__ );
 	?>
 		<script>
 		(function(){var p=[],w=window,d=document,e=f=0;p.push('ua='+encodeURIComponent(navigator.userAgent));e|=w.ActiveXObject?1:0;e|=w.opera?2:0;e|=w.chrome?4:0;
@@ -323,7 +323,7 @@ class AqGFCampaignAddOn extends GFAddOn {
 		AqCampVals = AqCampLast;
 	}
 
-	var whichURL = document.URL.substr(0,document.URL.lastIndexOf('/')) + '/includes/whichbrowser/server/detect.php';
+	var whichURL = document.URL.substr(0,document.URL.lastIndexOf('/')) + '/lib/whichbrowser/server/detect.php';
 
 	var i;
 	var utmfields = document.getElementsByClassName('gfield_aqGoogleAnalytics');
@@ -381,6 +381,13 @@ class AqGFCampaignAddOn extends GFAddOn {
 		});
 	});
 	</script>
+	<script>
+	if (typeof ga != 'undefined') {
+		ga(function(tracker) {
+		  var clientId = tracker.get('clientId');
+			console.log('ClientID: ' + clientId);
+		});
+	}
 	<?php
 
 	}
