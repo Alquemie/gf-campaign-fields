@@ -9,6 +9,11 @@ class GF_Field_AnalyticsUser extends GF_Field {
 
 	public $type = 'aqGAUserID';
 
+	public function __construct( $data = array() ) {
+		$data['visibility'] = 'visible';
+		parent::__construct($data);
+	}
+	
 	public function get_form_editor_field_title() {
 		return esc_attr__( 'Analytics User', 'gravityforms' );
 	}
