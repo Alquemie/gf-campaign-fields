@@ -388,6 +388,7 @@ class AqGFCampaignAddOn extends GFAddOn {
 			console.log('ClientID: ' + clientId);
 		});
 	}
+	</script>
 	<?php
 
 	}
