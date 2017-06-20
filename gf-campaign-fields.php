@@ -3,7 +3,7 @@
   Plugin Name: Gravity Forms Campaign Fields
   Plugin URI: https://www.gravityaddons.com/
   Description: Creates new field types that are populated with Google Analytics campaign data
-  Version: 2.1
+  Version: 2.2
   Author: Alquemie
   Author URI: https://www.alquemie.net/
 */
@@ -263,7 +263,7 @@ class AqGFCampaignAddOn extends GFAddOn {
 			"term": AlquemieJS.getUrlParameter(AqTermQS).toLowerCase(),
 			"content": AlquemieJS.getUrlParameter(AqContentQS).toLowerCase()
 		};
-	} else if (AlquemieJS.getUrlParameter('utm_campaign') != '') {
+	} else if (AlquemieJS.getUrlParameter('utm_source') != '') {
 		AqCampLast = {
 			"campaign": AlquemieJS.getUrlParameter('utm_campaign').toLowerCase(),
 			"source": AlquemieJS.getUrlParameter('utm_source').toLowerCase(),
