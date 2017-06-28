@@ -42,6 +42,8 @@ No, you must purchase your own license of Gravity Forms
 2. Building a form that contains campaign fields
 
 == Changelog ==
+= 2.1.1 =
+* Change Required query string to source to match GA 
 
 = 2.1 =
 * Refactored code to used GF_Field_HiddenGroup class
