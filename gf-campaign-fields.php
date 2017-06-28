@@ -3,7 +3,7 @@
   Plugin Name: Gravity Forms Campaign Fields
   Plugin URI: https://www.gravityaddons.com/
   Description: Creates new field types that are populated with Google Analytics campaign data
-  Version: 2.2
+  Version: 2.2.1
   Author: Alquemie
   Author URI: https://www.alquemie.net/
 */
