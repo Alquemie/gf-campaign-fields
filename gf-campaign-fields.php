@@ -255,7 +255,7 @@ class AqGFCampaignAddOn extends GFAddOn {
 	var AqCampLast = Cookies.getJSON('aqcamplast');
 	var AqCamp = Cookies.getJSON('aqcamp');
 
-	if (AlquemieJS.getUrlParameter(AqCampaignQS) != '') {
+	if (AlquemieJS.getUrlParameter(AqSourceQS) != '') {
 		AqCampLast = {
 			"campaign": AlquemieJS.getUrlParameter(AqCampaignQS).toLowerCase(),
 			"source": AlquemieJS.getUrlParameter(AqSourceQS).toLowerCase(),
