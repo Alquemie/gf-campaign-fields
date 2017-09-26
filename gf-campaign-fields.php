@@ -3,7 +3,7 @@
   Plugin Name: Gravity Forms Campaign Fields
   Plugin URI: https://www.gravityaddons.com/
   Description: Creates new field types that are populated with Google Analytics campaign data
-  Version: 2.2.1
+  Version: 2.3
   Author: Alquemie
   Author URI: https://www.alquemie.net/
 */
@@ -12,8 +12,8 @@ if ( ! class_exists( 'GFForms' ) ) {
 	die();
 }
 
-define( 'GF_CAMPAIGN_FIELD_VERSION', '2.1' );
-define( 'GF_CAMPAIGN_FIELD_SLUG', 'alquemiegfcampaign' );
+define( 'GF_CAMPAIGN_FIELD_VERSION', '2.3' );
+define( 'GF_CAMPAIGN_FIELD_SLUG', 'gfcampaign' );
 
 include_once "classes/class-gf-field-hiddengroup.php";
 include_once "classes/class-gf-field-googleanalytics.php";
@@ -224,6 +224,18 @@ class AqGFCampaignAddOn extends GFAddOn {
 		$pcridqs = $this->get_plugin_setting('aq_marin_pcrid');
 
 		$script = '<script>' . PHP_EOL;
+		$script .= "var alquemie = { attribution: '{$attribution}'," . PHP_EOL;
+		$script .= "	QS: {" . PHP_EOL;
+		$script .= "		campaign: '{$nameqs}'," . PHP_EOL;
+		$script .= "		source:  '{$sourceqs}'," . PHP_EOL;
+		$script .= "		medium: '{$mediumqs}'," . PHP_EOL;
+		$script .= "		term: '{$termqs}'," . PHP_EOL;
+		$script .= "		content: '{$contentqs}'," . PHP_EOL;
+		$script .= "		matchtype: '{$matchtypeqs}'," . PHP_EOL;
+		$script .= "		marinkwid: '{$mkwidqs}'," . PHP_EOL;
+		$script .= "		marinpcrid: '{$pcridqs}'," . PHP_EOL;
+		$script .= "	}	};" . PHP_EOL;
+		/*
 		$script .= "var AqAttribution = '{$attribution}';" . PHP_EOL;
 		$script .= "var AqCampaignQS = '{$nameqs}';" . PHP_EOL;
 		$script .= "var AqSourceQS =  '{$sourceqs}';" . PHP_EOL;
@@ -233,6 +245,8 @@ class AqGFCampaignAddOn extends GFAddOn {
 		$script .= "var AqMatchTypeQS = '{$matchtypeqs}';" . PHP_EOL;
 		$script .= "var AqMKWIDQS = '{$mkwidqs}';" . PHP_EOL;
 		$script .= "var AqPCRIDQS = '{$pcridqs}';" . PHP_EOL;
+		*/
+
 		$script .= '</script>' . PHP_EOL;
 		echo $script;
 
@@ -252,26 +266,26 @@ class AqGFCampaignAddOn extends GFAddOn {
 		}
 	};
 
-	var AqCampLast = Cookies.getJSON('aqcamplast');
-	var AqCamp = Cookies.getJSON('aqcamp');
+	alquemie.LastCamp = Cookies.getJSON('aqcamplast');
+	alquemie.Campaign = Cookies.getJSON('aqcamp');
 
-	if (AlquemieJS.getUrlParameter(AqSourceQS) != '') {
-		AqCampLast = {
-			"campaign": AlquemieJS.getUrlParameter(AqCampaignQS).toLowerCase(),
-			"source": AlquemieJS.getUrlParameter(AqSourceQS).toLowerCase(),
-			"medium": AlquemieJS.getUrlParameter(AqMediumQS).toLowerCase(),
-			"term": AlquemieJS.getUrlParameter(AqTermQS).toLowerCase(),
-			"content": AlquemieJS.getUrlParameter(AqContentQS).toLowerCase()
+	if (AlquemieJS.getUrlParameter(alquemie.QS.source) != '') {
+		alquemie.LastCamp = {
+			"campaign": AlquemieJS.getUrlParameter(alquemie.QS.campaign).toLowerCase(),
+			"source": AlquemieJS.getUrlParameter(alquemie.QS.source).toLowerCase(),
+			"medium": AlquemieJS.getUrlParameter(alquemie.QS.medium).toLowerCase(),
+			"term": AlquemieJS.getUrlParameter(alquemie.QS.term).toLowerCase(),
+			"content": AlquemieJS.getUrlParameter(alquemie.QS.content).toLowerCase()
 		};
 	} else if (AlquemieJS.getUrlParameter('utm_source') != '') {
-		AqCampLast = {
+		alquemie.LastCamp = {
 			"campaign": AlquemieJS.getUrlParameter('utm_campaign').toLowerCase(),
 			"source": AlquemieJS.getUrlParameter('utm_source').toLowerCase(),
 			"medium": AlquemieJS.getUrlParameter('utm_medium').toLowerCase(),
 			"term": AlquemieJS.getUrlParameter('utm_term').toLowerCase(),
 			"content": AlquemieJS.getUrlParameter('utm_content').toLowerCase()
 		};
-	} else if (typeof AqCampLast == 'undefined') {
+	} else if (typeof alquemie.LastCamp == 'undefined') {
 		var source = campaign = '';
 		try {
 			if (typeof document.referrer != 'undefined') {
@@ -287,7 +301,7 @@ class AqGFCampaignAddOn extends GFAddOn {
 			console.log(e.message);
 		}
 
-		AqCampLast = {
+		alquemie.LastCamp = {
 			"campaign": campaign,
 			"source": source.toLowerCase(),
 			"medium": "",
@@ -296,58 +310,35 @@ class AqGFCampaignAddOn extends GFAddOn {
 		};
 	}
 
-	var mtype = AlquemieJS.getUrlParameter(AqMatchTypeQS);
-	if (mtype != '' || (typeof AqCampLast.matchtype == 'undefined')) AqCampLast.matchtype = mtype;
+	var mtype = AlquemieJS.getUrlParameter(alquemie.QS.matchtype);
+	if (mtype != '' || (typeof alquemie.LastCamp.matchtype == 'undefined')) alquemie.LastCamp.matchtype = mtype;
 
-	var mkwid = AlquemieJS.getUrlParameter(AqMKWIDQS);
-	if (mkwid != '' || (typeof AqCampLast.mkwid == 'undefined')) AqCampLast.mkwid = mkwid;
+	var mkwid = AlquemieJS.getUrlParameter(alquemie.QS.marinkwid);
+	if (mkwid != '' || (typeof alquemie.LastCamp.mkwid == 'undefined')) alquemie.LastCamp.mkwid = mkwid;
 
-	var pcrid = AlquemieJS.getUrlParameter(AqPCRIDQS);
-	if (pcrid != '' || (typeof AqCampLast.pcrid == 'undefined')) AqCampLast.pcrid = pcrid;
+	var pcrid = AlquemieJS.getUrlParameter(alquemie.QS.marinpcrid);
+	if (pcrid != '' || (typeof alquemie.LastCamp.pcrid == 'undefined')) alquemie.LastCamp.pcrid = pcrid;
 
 	var gclid = AlquemieJS.getUrlParameter('gclid');
-	if (gclid != '' || (typeof AqCampLast.gclid == 'undefined')) AqCampLast.gclid = gclid;
+	if (gclid != '' || (typeof alquemie.LastCamp.gclid == 'undefined')) alquemie.LastCamp.gclid = gclid;
 
-	if (typeof AqCamp == 'undefined') {
-		AqCamp = AqCampLast;
+	if (typeof alquemie.Campaign == 'undefined') {
+		alquemie.Campaign = alquemie.LastCamp;
 	}
 
-	Cookies.set('aqcamplast', AqCampLast);
-	Cookies.set('aqcamp', AqCamp, { expires: <?php echo $cookieLife; ?> });
+	Cookies.set('aqcamplast', alquemie.LastCamp);
+	Cookies.set('aqcamp', alquemie.Campaign, { expires: <?php echo $cookieLife; ?> });
 
-	AqAttribution = (typeof AqAttribution == 'undefined') ? 'last' : AqAttribution;
+	alquemie.attribution = (typeof alquemie.attribution == 'undefined') ? 'last' : alquemie.attribution;
 
-	if (AqAttribution == 'first') {
-		AqCampVals = AqCamp;
+	if (alquemie.attribution == 'first') {
+		alquemie.thisCampaign = alquemie.Campaign;
 	} else {
-		AqCampVals = AqCampLast;
+		alquemie.thisCampaign = alquemie.LastCamp;
 	}
+	if (typeof dataLayer != 'undefined') dataLayer.push(alquemie.thisCampaign);
 
 	var whichURL = document.URL.substr(0,document.URL.lastIndexOf('/')) + '/lib/whichbrowser/server/detect.php';
-
-	var i;
-	var utmfields = document.getElementsByClassName('gfield_aqGoogleAnalytics');
-	for( i = 0; i < utmfields.length; i++) {
-		document.getElementById(utmfields[i].id + '_3').value = AqCampVals.campaign;
-		document.getElementById(utmfields[i].id + '_1').value = AqCampVals.source;
-		document.getElementById(utmfields[i].id + '_2').value = AqCampVals.medium;
-		document.getElementById(utmfields[i].id + '_4').value = AqCampVals.term;
-		document.getElementById(utmfields[i].id + '_5').value = AqCampVals.content;
-	}
-
-	var semfields = document.getElementsByClassName('gfield_aqSEM');
-	for( i = 0; i < semfields.length; i++) {
-		document.getElementById(semfields[i].id + '_1').value = AqCampVals.matchtype;
-		document.getElementById(semfields[i].id + '_2').value = AqCampVals.gclid;
-	}
-
-	var marinfields = document.getElementsByClassName('gfield_aqMarin');
-	for( i = 0; i < marinfields.length; i++) {
-		document.getElementById(marinfields[i].id + '_1').value = AqCampVals.mkwid;
-		document.getElementById(marinfields[i].id + '_2').value = AqCampVals.pcrid;
-	}
-
-	if (typeof dataLayer != 'undefined') dataLayer.push(AqCampVals);
 
 	function waitForWhichBrowser(cb) {
 		var callback = cb;
@@ -361,7 +352,8 @@ class AqGFCampaignAddOn extends GFAddOn {
 
 		wait();
 	}
-	document.addEventListener("DOMContentLoaded", function(event) {
+
+	function updateCampaignFields() {
 		waitForWhichBrowser(function() {
 
 			try {
@@ -379,7 +371,38 @@ class AqGFCampaignAddOn extends GFAddOn {
 				alert(e);
 			}
 		});
+
+		var utmfields = document.getElementsByClassName('gfield_aqGoogleAnalytics');
+		for( var i = 0; i < utmfields.length; i++) {
+			document.getElementById(utmfields[i].id + '_3').value = alquemie.thisCampaign.campaign;
+			document.getElementById(utmfields[i].id + '_1').value = alquemie.thisCampaign.source;
+			document.getElementById(utmfields[i].id + '_2').value = alquemie.thisCampaign.medium;
+			document.getElementById(utmfields[i].id + '_4').value = alquemie.thisCampaign.term;
+			document.getElementById(utmfields[i].id + '_5').value = alquemie.thisCampaign.content;
+		}
+
+		var semfields = document.getElementsByClassName('gfield_aqSEM');
+		for( i = 0; i < semfields.length; i++) {
+			document.getElementById(semfields[i].id + '_1').value = alquemie.thisCampaign.matchtype;
+			document.getElementById(semfields[i].id + '_2').value = alquemie.thisCampaign.gclid;
+		}
+
+		var marinfields = document.getElementsByClassName('gfield_aqMarin');
+		for( i = 0; i < marinfields.length; i++) {
+			document.getElementById(marinfields[i].id + '_1').value = alquemie.thisCampaign.mkwid;
+			document.getElementById(marinfields[i].id + '_2').value = alquemie.thisCampaign.pcrid;
+		}
+	}
+
+	document.addEventListener("DOMContentLoaded",function(event) {
+			updateCampaignFields();
 	});
+	var gforms = document.getElementsByClassName("gform_wrapper");
+	for (var f = 0; f < gforms.length; f++) {
+		gforms[f].addEventListener("DOMSubtreeModified", function(event) {
+			updateCampaignFields();
+		});
+	}
 	</script>
 	<script>
 	if (typeof ga != 'undefined') {
@@ -435,8 +458,4 @@ function gf_campaign_addon() {
     return AqGFCampaignAddOn::get_instance();
 }
 
-
-
-// wp_enqueue_script( 'aq_campaign_js', plugins_url( 'gf-campaigns.js', __FILE__ ), null, null, true );
 wp_enqueue_script( 'aq_js_cookie', plugins_url( 'js/js.cookie.min.js', __FILE__ ), null, null, true );
-// wp_enqueue_script( 'aq_campaign_js', plugins_url( 'gf-loadcamp.js', __FILE__ ), null, null, true );
