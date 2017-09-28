@@ -35,11 +35,14 @@ No, you must purchase your own license of Gravity Forms
 2. Building a form that contains campaign fields
 
 ## Changelog
+### 2.3.1
+* Fixed Undefined Constant Error
+
 ### 2.3
 * Updated JS variable names
 * Bug fixes
 
-### 2.2.1 
+### 2.2.1
 * <script> closing tag fix
 
 ### 2.2

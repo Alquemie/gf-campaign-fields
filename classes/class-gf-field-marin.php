@@ -23,14 +23,14 @@ class AqGF_Marin extends GF_Field_HiddenGroup {
 						'id'           => $this->id . '.1',
 						'title'        => esc_html__( 'Marin KW', GF_CAMPAIGN_FIELD_SLUG ),
 						'label'			=> esc_html__( 'MKWID', GF_CAMPAIGN_FIELD_SLUG ),
-						'default_value' => array('aliases' => GF_CAMPAIGN_MERGETAG_MATCHTYPE),
+						'default_value' => array('aliases' => 'mkwid'),
 
 					),
 					array(
 						'id'           => $this->id . '.2',
 						'title'        => esc_html__( 'Creative ID', GF_CAMPAIGN_FIELD_SLUG ),
 						'label'			=> esc_html__( 'PCRID', GF_CAMPAIGN_FIELD_SLUG ),
-						'default_value' => array('aliases' => GF_CAMPAIGN_MERGETAG_GLCID),
+						'default_value' => array('aliases' => 'pcrid'),
 					),
 
 				);

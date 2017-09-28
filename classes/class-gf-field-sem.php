@@ -51,14 +51,14 @@ class GF_Field_SEM_Values extends GF_Field_HiddenGroup {
 					'id'           => $this->id . '.1',
 					'title'        => esc_html__( 'Match Type', GF_CAMPAIGN_FIELD_SLUG ),
 					'label'			=> esc_html__( 'Match Type', GF_CAMPAIGN_FIELD_SLUG ),
-					'default_value' => array('aliases' => GF_CAMPAIGN_MERGETAG_MATCHTYPE),
+					'default_value' => array('aliases' => 'matchtype'),
 
 				),
 				array(
 					'id'           => $this->id . '.2',
 					'title'        => esc_html__( 'GLCID', GF_CAMPAIGN_FIELD_SLUG ),
 					'label'			=> esc_html__( 'GLCID', GF_CAMPAIGN_FIELD_SLUG ),
-					'default_value' => array('aliases' => GF_CAMPAIGN_MERGETAG_GLCID),
+					'default_value' => array('aliases' => 'gclid'),
 				),
 
 			);

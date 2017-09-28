@@ -3,7 +3,7 @@
   Plugin Name: Gravity Forms Campaign Fields
   Plugin URI: https://www.gravityaddons.com/
   Description: Creates new field types that are populated with Google Analytics campaign data
-  Version: 2.3
+  Version: 2.3.1
   Author: Alquemie
   Author URI: https://www.alquemie.net/
 */
@@ -12,7 +12,7 @@ if ( ! class_exists( 'GFForms' ) ) {
 	die();
 }
 
-define( 'GF_CAMPAIGN_FIELD_VERSION', '2.3' );
+define( 'GF_CAMPAIGN_FIELD_VERSION', '2.3.1' );
 define( 'GF_CAMPAIGN_FIELD_SLUG', 'gfcampaign' );
 
 include_once "classes/class-gf-field-hiddengroup.php";
@@ -28,7 +28,7 @@ GFForms::include_feed_addon_framework();
  */
 class AqGFCampaignAddOn extends GFAddOn {
 
-	protected $_version = AQ_VELOCIFY_ADDON_VERSION;
+	protected $_version = GF_CAMPAIGN_FIELD_VERSION;
 	protected $_min_gravityforms_version = '2.0.7.4';
 	protected $_slug = 'gf-campaign-fields';
 	protected $_path = 'gf-campaign-fields/gf-campaign-fields.php';
@@ -58,6 +58,7 @@ class AqGFCampaignAddOn extends GFAddOn {
 		add_action('wp_head', array($this, 'whichbrowser'));
 		add_action('wp_head', array($this, 'set_campaign_parms'), 100 );
 		add_action('wp_footer', array($this, 'loadCampaignData'), 100);
+		add_action( 'wp_enqueue_scripts', array($this, 'load_campaign_js') );
 
 		parent::init();
 	}
@@ -235,18 +236,6 @@ class AqGFCampaignAddOn extends GFAddOn {
 		$script .= "		marinkwid: '{$mkwidqs}'," . PHP_EOL;
 		$script .= "		marinpcrid: '{$pcridqs}'," . PHP_EOL;
 		$script .= "	}	};" . PHP_EOL;
-		/*
-		$script .= "var AqAttribution = '{$attribution}';" . PHP_EOL;
-		$script .= "var AqCampaignQS = '{$nameqs}';" . PHP_EOL;
-		$script .= "var AqSourceQS =  '{$sourceqs}';" . PHP_EOL;
-		$script .= "var AqMediumQS = '{$mediumqs}';" . PHP_EOL;
-		$script .= "var AqTermQS = '{$termqs}';" . PHP_EOL;
-		$script .= "var AqContentQS = '{$contentqs}';" . PHP_EOL;
-		$script .= "var AqMatchTypeQS = '{$matchtypeqs}';" . PHP_EOL;
-		$script .= "var AqMKWIDQS = '{$mkwidqs}';" . PHP_EOL;
-		$script .= "var AqPCRIDQS = '{$pcridqs}';" . PHP_EOL;
-		*/
-
 		$script .= '</script>' . PHP_EOL;
 		echo $script;
 
@@ -433,6 +422,11 @@ class AqGFCampaignAddOn extends GFAddOn {
 	public function validate_int( $value ) {
     return (preg_match('/^[1-9][0-9]*$/', $value) === 1);
 	}
+
+	public function load_campaign_js() {
+	    wp_enqueue_script( 'aq_js_cookie', plugins_url( 'js/js.cookie.min.js', __FILE__ ), null, GF_CAMPAIGN_FIELD_VERSION, true );
+	}
+
 }
 
 add_action( 'gform_loaded', array( 'AQ_Campaign_AddOn_Bootstrap', 'load' ), 5 );
@@ -457,5 +451,3 @@ endif;
 function gf_campaign_addon() {
     return AqGFCampaignAddOn::get_instance();
 }
-
-wp_enqueue_script( 'aq_js_cookie', plugins_url( 'js/js.cookie.min.js', __FILE__ ), null, null, true );
