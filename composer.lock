@@ -4,7 +4,6 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "649e8a17aefeae986f4d47980c9811f7",
     "content-hash": "44cac2060bb0a30598e2cf2f78583b1c",
     "packages": [
         {
@@ -51,7 +50,7 @@
                 "psr",
                 "psr-6"
             ],
-            "time": "2016-08-06 20:24:11"
+            "time": "2016-08-06T20:24:11+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -91,20 +90,20 @@
                 }
             ],
             "description": "A polyfill for getallheaders.",
-            "time": "2014-06-03 14:12:33"
+            "time": "2014-06-03T14:12:33+00:00"
         },
         {
             "name": "whichbrowser/parser",
-            "version": "v2.0.24",
+            "version": "v2.0.32",
             "source": {
                 "type": "git",
-                "url": "https://github.com/WhichBrowser/Parser.git",
-                "reference": "ed6e911bed49a2946b5920469c0071b6fe57776e"
+                "url": "https://github.com/WhichBrowser/Parser-PHP.git",
+                "reference": "933a695fe0b3d6cf3e957af9b73dd14ade6ed354"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WhichBrowser/Parser/zipball/ed6e911bed49a2946b5920469c0071b6fe57776e",
-                "reference": "ed6e911bed49a2946b5920469c0071b6fe57776e",
+                "url": "https://api.github.com/repos/WhichBrowser/Parser-PHP/zipball/933a695fe0b3d6cf3e957af9b73dd14ade6ed354",
+                "reference": "933a695fe0b3d6cf3e957af9b73dd14ade6ed354",
                 "shasum": ""
             },
             "require": {
@@ -112,15 +111,15 @@
                 "psr/cache": "^1.0"
             },
             "require-dev": {
-                "cache/array-adapter": "^0.4",
                 "icomefromthenet/reverse-regex": "dev-master",
-                "league/csv": "^8.0",
-                "phpdocumentor/reflection-docblock": "^2.0",
                 "phpunit/php-code-coverage": "^2.2|^3.0",
-                "phpunit/phpunit": "^4.0",
-                "satooshi/php-coveralls": "^0.6",
+                "phpunit/phpunit": "^4.0|^5.0",
+                "satooshi/php-coveralls": "^1.0",
                 "squizlabs/php_codesniffer": "2.5.*",
-                "symfony/yaml": "^2.7"
+                "symfony/yaml": ">=2.8"
+            },
+            "suggest": {
+                "cache/array-adapter": "Allows testing of the caching functionality"
             },
             "type": "library",
             "autoload": {
@@ -150,7 +149,7 @@
                 "ua",
                 "useragent"
             ],
-            "time": "2016-09-08 14:07:33"
+            "time": "2018-01-24T20:27:42+00:00"
         },
         {
             "name": "whichbrowser/server",
@@ -189,7 +188,7 @@
                 "browser",
                 "useragent"
             ],
-            "time": "2016-08-10 16:50:34"
+            "time": "2016-08-10T16:50:34+00:00"
         }
     ],
     "packages-dev": [],
