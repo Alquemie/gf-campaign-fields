@@ -3,7 +3,7 @@
   Plugin Name: Gravity Forms Campaign Fields
   Plugin URI: https://www.gravityaddons.com/
   Description: Creates new field types that are populated with Google Analytics campaign data
-  Version: 2.3.2
+  Version: 2.4.0
   Author: Alquemie
   Author URI: https://www.alquemie.net/
 */
@@ -12,7 +12,7 @@ if ( ! class_exists( 'GFForms' ) ) {
 	die();
 }
 
-define( 'GF_CAMPAIGN_FIELD_VERSION', '2.3.2' );
+define( 'GF_CAMPAIGN_FIELD_VERSION', '2.4.0' );
 define( 'GF_CAMPAIGN_FIELD_SLUG', 'gfcampaign' );
 
 include_once "classes/class-gf-field-hiddengroup.php";
@@ -315,6 +315,7 @@ class AqGFCampaignAddOn extends GFAddOn {
 		alquemie.Campaign = alquemie.LastCamp;
 	}
 
+	Cookies.withAttributes({ path: '/', expires: <?php echo $cookieLife; ?>, secure: true, sameSite: 'Lax'  })
 	Cookies.set('aqcamplast', alquemie.LastCamp);
 	Cookies.set('aqcamp', alquemie.Campaign, { expires: <?php echo $cookieLife; ?> });
 
@@ -424,7 +425,7 @@ class AqGFCampaignAddOn extends GFAddOn {
 	}
 
 	public function load_campaign_js() {
-	    wp_enqueue_script( 'aq_js_cookie', plugins_url( 'js/js.cookie.min.js', __FILE__ ), null, GF_CAMPAIGN_FIELD_VERSION, true );
+	    wp_enqueue_script( 'aq_js_cookie', plugins_url( 'js/js.cookie.min.js', __FILE__ ), null, '2.2.1', true );
 	}
 
 }
