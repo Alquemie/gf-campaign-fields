@@ -10,9 +10,6 @@
     "homepage": "https://www.gravityaddons.com",
     "license": "GPL-3.0",
     "type": "wordpress-plugin",
-    "require": {
-      "whichbrowser/server": "v2.0.12"
-    },
     "config": {
         "vendor-dir": "lib"
     }
