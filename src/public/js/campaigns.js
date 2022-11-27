@@ -123,8 +123,9 @@ class AlquemieCampaignTracker {
   setCookies() {
     if (typeof Cookies != 'undefined') {
       let lifetime = (typeof(this.#settings.cookieLife) === "number") ? this.#settings.cookieLife : 30;
-      Cookies.set('alq_campaign_last', this.#lastTouch, { path: '/', expires: lifetime, secure: true, sameSite: 'Lax'  } );
-      Cookies.set('alq_campaign', this.#firstTouch, { path: '/', expires: lifetime, secure: true, sameSite: 'Lax'  } );
+      // { path: '/', expires: lifetime, secure: true, sameSite: 'Lax'  }
+      Cookies.set('alq_campaign_last', JSON.stringify(this.#lastTouch), { path: '/', expires: lifetime, sameSite: 'Lax'  } );
+      Cookies.set('alq_campaign', JSON.stringify(this.#firstTouch), { path: '/', expires: lifetime, sameSite: 'Lax'  } );
     }
   }
 
