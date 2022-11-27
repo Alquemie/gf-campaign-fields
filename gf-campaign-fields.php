@@ -92,13 +92,12 @@ class GravityFormsCampaign_Bootstrap {
   
 			$isDevMode = _is_in_development_mode();
 			if ($isDevMode) {
-				wp_enqueue_script( 'js-cookie', _get_plugin_url() . '/src/public/js/js.cookie.min.js'  , array() , null , true );
 				$jsFileURI = _get_plugin_url() . '/src/public/js/campaigns.js';
 			} else {
 				$jsFilePath = glob( _get_plugin_directory() . '/dist/js/public.*.js' );
 				$jsFileURI = _get_plugin_url() . '/dist/js/' . basename($jsFilePath[0]);
 			}
-			
+			wp_enqueue_script( 'js-cookie', _get_plugin_url() . '/src/public/js/js.cookie.min.js'  , array() , null , true );
 			wp_enqueue_script( 'gf-campaign-fields-js', $jsFileURI , array('jquery') , null , true );
 		}
 

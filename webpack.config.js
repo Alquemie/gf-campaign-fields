@@ -38,7 +38,7 @@ const config = {
 	},
   plugins: [
     new webpack.ProgressPlugin(),
-    new CleanWebpackPlugin({cleanOnceBeforeBuildPatterns: ['**/*.js','**/*.css','!**/*.png','!index.php'],}),
+    new CleanWebpackPlugin({cleanOnceBeforeBuildPatterns: ['**/*.js','**/*.css','**/*.txt','!**/*.png','!index.php'],}),
     // new HtmlWebpackPlugin({ template: './src/index.html' }),
 ],
 }

@@ -1,3 +1,4 @@
 
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
+
 import { Campaigns } from './campaigns.js';

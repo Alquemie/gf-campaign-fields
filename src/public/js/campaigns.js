@@ -26,8 +26,8 @@ class AlquemieCampaignTracker {
   };
 
   constructor(campaignSettings) {
-    this.#firstTouch =  JSON.parse(localStorage.getItem('alq_campaign')); //Cookies.getJSON('alq_campaign');
-    this.#lastTouch =  JSON.parse(localStorage.getItem('alq_campaign_last')); // Cookies.getJSON('alq_campaign_last');
+    this.#firstTouch =  JSON.parse(localStorage.getItem('alq_campaign')); 
+    this.#lastTouch =  JSON.parse(localStorage.getItem('alq_campaign_last')); 
     this.#settings = campaignSettings;
     this.#device = this.getDeviceInfo();
 
@@ -126,6 +126,7 @@ class AlquemieCampaignTracker {
       // { path: '/', expires: lifetime, secure: true, sameSite: 'Lax'  }
       Cookies.set('alq_campaign_last', JSON.stringify(this.#lastTouch), { path: '/', expires: lifetime, sameSite: 'Lax'  } );
       Cookies.set('alq_campaign', JSON.stringify(this.#firstTouch), { path: '/', expires: lifetime, sameSite: 'Lax'  } );
+      console.log("Cookie Last: " + JSON.stringify(this.#lastTouch));
     }
   }
 
