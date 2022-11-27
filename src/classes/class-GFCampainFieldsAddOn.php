@@ -2,21 +2,19 @@
 /*
 *
 */
-// namespace Alquemie\Campaigns;
-
+namespace Alquemie\CampaignFields;
 
 /**
  *
  */
 class AqGFCampaignAddOn extends \GFAddOn {
-
-	protected $_version = GF_CAMPAIGN_FIELD_VERSION;
+	protected $_version;
 	protected $_min_gravityforms_version = '2.5';
 	protected $_slug = 'gf-campaign-fields';
 	protected $_path = 'gf-campaign-fields/gf-campaign-fields.php';
 	protected $_full_path = __FILE__;
 	protected $_title = 'Marketing Campaign Add-On';
-	protected $_short_title = 'Marketing Info';
+	protected $_short_title = 'Marketing Campaign';
 
 	private static $_instance = null;
 
@@ -37,31 +35,11 @@ class AqGFCampaignAddOn extends \GFAddOn {
 	 * Handles hooks and loading of language files.
 	 */
 	public function init() {
-		// add_action('wp_head', array($this, 'whichbrowser'));
+		$this->_version = _get_plugin_version();
+
 		add_action('wp_head', array($this, 'set_campaign_parms'), 100 );
-		add_action('wp_enqueue_scripts', array($this, 'load_campaign_js') );
-		add_action( 'gform_after_save_form', array( $this , 'require_analytics_field' ), 20, 2 );
-
+		
 		parent::init();
-	}
-
-	public function require_analytics_field( $form, $is_new ) {
-
-		$hasField = false;
-		foreach ($form['fields'] as $f) {
-			if ($f['type'] == 'aqGoogleAnalytics') { $hasField = true; }
-		}
-
-		if (!$hasField) {
-			$form['is_active'] = '1';
-			$new_field_id = \GFFormsModel::get_next_field_id( $form['fields'] );
-			$properties['type'] = 'aqGoogleAnalytics';
-			$properties['id']  = $new_field_id;
-			$properties['label'] = 'UTM Parameters';
-			$field = \GF_Fields::create( $properties );
-			$form['fields'][] = $field;
-			$result = \GFAPI::update_form( $form );
-		}
 	}
 
 	public function get_menu_icon() {
@@ -230,23 +208,6 @@ class AqGFCampaignAddOn extends \GFAddOn {
 	 */
 	public function validate_int( $value ) {
     return (preg_match('/^[1-9][0-9]*$/', $value) === 1);
-	}
-
-	public function load_campaign_js() {
-	    // wp_enqueue_script( 'aq_js_cookie', plugins_url( 'js/js.cookie.min.js', __FILE__ ), null, '2.2.1', true );
-			$isDevMode = _is_in_development_mode();
-			//$isDevMode = false;
-      if ($isDevMode) {
-          $jsFileURI = _get_plugin_url() . '/src/public/js/campaigns.js';
-      } else {
-          $jsFilePath = glob( _get_plugin_directory() . '/dist/js/public.*.js' );
-          $jsFileURI = _get_plugin_url() . '/dist/js/' . basename($jsFilePath[0]);
-      }
-      
-      $this->_settings['jsfileuri'] = $jsFileURI;
-      $this->_settings['devMode'] = $isDevMode;
-
-      wp_enqueue_script( 'gf-campaign-public', $jsFileURI , array() , null , true );
 	}
 
 }

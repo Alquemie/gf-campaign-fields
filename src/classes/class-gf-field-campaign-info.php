@@ -10,7 +10,7 @@ class GF_Field_Alquemie_Campaign_Info extends GF_Field {
 	public $type = 'aqGoogleAnalytics';
 
 	public function get_form_editor_field_title() {
-		return esc_attr__( 'UTM Parameters', 'gf-campaign-fields' );
+		return esc_attr__( 'Marketing Campaign', 'gf-campaign-fields' );
 	}
 
 	/**
@@ -21,7 +21,7 @@ class GF_Field_Alquemie_Campaign_Info extends GF_Field {
 	 * @return string
 	 */
 	public function get_form_editor_field_description() {
-		return esc_attr__( 'Stores a JSON object of relevant UTM parameters.', 'gf-campaign-fields' );
+		return esc_attr__( 'Stores a JSON object of relevant marketing campagin parameters.', 'gf-campaign-fields' );
 	}
 
   public function get_form_editor_button()
