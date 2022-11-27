@@ -80,7 +80,7 @@ class GravityFormsCampaign_Bootstrap {
 				$new_field_id = \GFFormsModel::get_next_field_id( $form['fields'] );
 				$properties['type'] = 'aqGoogleAnalytics';
 				$properties['id']  = $new_field_id;
-				$properties['label'] = 'UTM Parameters';
+				$properties['label'] = 'Campagin Details';
 				$properties['size'] = 'small';
 				$field = \GF_Fields::create( $properties );
 				$form['fields'][] = $field;
@@ -92,13 +92,13 @@ class GravityFormsCampaign_Bootstrap {
   
 			$isDevMode = _is_in_development_mode();
 			if ($isDevMode) {
-					$jsFileURI = _get_plugin_url() . '/src/js/campaign.js';
+				wp_enqueue_script( 'js-cookie', _get_plugin_url() . '/src/public/js/js.cookie.min.js'  , array() , null , true );
+				$jsFileURI = _get_plugin_url() . '/src/public/js/campaigns.js';
 			} else {
-					$jsFilePath = glob( _get_plugin_directory() . '/dist/js/public.*.js' );
-					$jsFileURI = _get_plugin_url() . '/dist/js/' . basename($jsFilePath[0]);
+				$jsFilePath = glob( _get_plugin_directory() . '/dist/js/public.*.js' );
+				$jsFileURI = _get_plugin_url() . '/dist/js/' . basename($jsFilePath[0]);
 			}
 			
-			//wp_enqueue_script( $handle, $src, $deps, $ver, $in_footer );
 			wp_enqueue_script( 'gf-campaign-fields-js', $jsFileURI , array('jquery') , null , true );
 		}
 
