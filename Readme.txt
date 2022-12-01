@@ -44,7 +44,7 @@ No, you must purchase your own license of Gravity Forms
 
 1. The settings screen where you define first/last touch attribution and the query string parameters used to define the values
 2. Building a form that contains campaign fields
-2. Campaign parameters stored as JSON string in form entry
+3. Campaign parameters stored as JSON string in form entry
 
 == Changelog ==
 = 3.0.0 =

@@ -1,15 +1,15 @@
 <?php
 /*
-GravityForms Camaign Fields AddOn
+Gravity Forms Camaign Info AddOn
 
 @package     Alquemie\CampaignFields
 @author      Chris Carrel
 @license     GPL-3.0+
  
-Plugin Name: GravityForms Campaign Fields
+Plugin Name: Gravity Forms Campaign Info AddOn
 Plugin URI: https://www.gravityaddons.com/
 Description: Creates new field that is populated with a JSON object containing Google Analytics campaign information (UTM Parameters) and additional advertising information sent via query string parameters.
-Version: 3.0.0
+Version: 3.0.1
 Author: Alquemie
 Author URI: https://www.alquemie.net/
 Text Domain: gf-campaign-fields
@@ -17,7 +17,7 @@ License:     GPL-3.0+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
 ------------------------------------------------------------------------
-Copyright 2012-2016 Carmack Holdings, LLC.
+Copyright 2022 Carmack Holdings, LLC.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -176,7 +176,7 @@ function _get_plugin_url() {
 	static $plugin_url;
 
 	if ( empty( $plugin_url ) ) {
-		$plugin_url = plugins_url( null, __FILE__ );
+		$plugin_url = plugins_url( basename( __DIR__ ) . '' );
 	}
 
 	return $plugin_url;
