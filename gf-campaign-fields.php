@@ -52,54 +52,55 @@ class GravityFormsCampaign_Bootstrap {
             return;
         }
 
-				self::includes();
-				self::hooks();
+		self::includes();
+		self::hooks();
 
         \GFAddOn::register( '\Alquemie\CampaignFields\AqGFCampaignAddOn' );
     }
 
-		public static function includes() {
-			require_once _get_plugin_directory() . '/src/classes/class-GFCampainFieldsAddOn.php';
-			require_once _get_plugin_directory() . '/src/classes/class-gf-field-campaign-info.php';	
+	public static function includes() {
+		require_once _get_plugin_directory() . '/src/classes/class-GFCampainFieldsAddOn.php';
+		require_once _get_plugin_directory() . '/src/classes/class-gf-field-campaign-info.php';	
+	}
+
+	public static function hooks() {
+		add_action( 'wp_enqueue_scripts', array( __CLASS__,  'enqueue_campaign_scripts') );
+		add_action( 'gform_after_save_form', array( __CLASS__ , 'require_analytics_field' ), 50, 2 );
+	}
+
+	public static function require_analytics_field( $form, $is_new ) {
+
+		$hasField = false;
+		foreach ($form['fields'] as $f) {
+			if ($f['type'] == 'aqGoogleAnalytics') { $hasField = true; }
 		}
 
-		public static function hooks() {
-			add_action( 'wp_enqueue_scripts', array( __CLASS__,  'enqueue_campaign_scripts') );
-			add_action( 'gform_after_save_form', array( __CLASS__ , 'require_analytics_field' ), 50, 2 );
+		if (!$hasField) {
+			$form['is_active'] = '1';
+			$new_field_id = \GFFormsModel::get_next_field_id( $form['fields'] );
+			$properties['type'] = 'aqGoogleAnalytics';
+			$properties['id']  = $new_field_id;
+			$properties['label'] = 'Campagin Details';
+			$properties['size'] = 'small';
+			$field = \GF_Fields::create( $properties );
+			$form['fields'][] = $field;
+			$result = \GFAPI::update_form( $form );
 		}
+	}
 
-		public static function require_analytics_field( $form, $is_new ) {
+	public static function enqueue_campaign_scripts() {
 
-			$hasField = false;
-			foreach ($form['fields'] as $f) {
-				if ($f['type'] == 'aqGoogleAnalytics') { $hasField = true; }
-			}
-	
-			if (!$hasField) {
-				$form['is_active'] = '1';
-				$new_field_id = \GFFormsModel::get_next_field_id( $form['fields'] );
-				$properties['type'] = 'aqGoogleAnalytics';
-				$properties['id']  = $new_field_id;
-				$properties['label'] = 'Campagin Details';
-				$properties['size'] = 'small';
-				$field = \GF_Fields::create( $properties );
-				$form['fields'][] = $field;
-				$result = \GFAPI::update_form( $form );
-			}
+		$isDevMode = _is_in_development_mode();
+		if ($isDevMode) {
+			$jsFileURI = _get_plugin_url() . '/src/public/js/campaigns.js';
+		} else {
+			$jsFilePath = glob( _get_plugin_directory() . '/dist/js/public.*.js' );
+			$jsFileURI = _get_plugin_url() . '/dist/js/' . basename($jsFilePath[0]);
 		}
-
-		public static function enqueue_campaign_scripts() {
-  
-			$isDevMode = _is_in_development_mode();
-			if ($isDevMode) {
-				$jsFileURI = _get_plugin_url() . '/src/public/js/campaigns.js';
-			} else {
-				$jsFilePath = glob( _get_plugin_directory() . '/dist/js/public.*.js' );
-				$jsFileURI = _get_plugin_url() . '/dist/js/' . basename($jsFilePath[0]);
-			}
-			wp_enqueue_script( 'js-cookie', _get_plugin_url() . '/src/public/js/js.cookie.min.js'  , array() , null , true );
-			wp_enqueue_script( 'gf-campaign-fields-js', $jsFileURI , array('jquery') , null , true );
-		}
+		wp_enqueue_script( 'js-cookie', _get_plugin_url() . '/src/dist/js/js.cookie.min.js'  , array() , null , true );
+		wp_enqueue_script( 'gf-campaign-fields-js', $jsFileURI , array('jquery') , null , true );
+		
+	}
 
 }
 endif;

@@ -41,7 +41,7 @@ class AlquemieCampaignTracker {
     let checkURL = new URL(location.href);
     let currentCampagin = {};
     for (const [key, value] of checkURL.searchParams) {
-      // console.log(`${key}, ${value}`);
+      console.log(`${key}, ${value}`);
       let cs = this.getKeyByValue(this.#settings.parameters, key);
       if (typeof cs == 'undefined') {
         if (typeof this.#adKeys[key] != 'undefined') {

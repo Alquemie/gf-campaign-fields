@@ -64,27 +64,28 @@ class AqGFCampaignAddOn extends \GFAddOn {
 						'class'             => 'small',
 						'default_value'	=> 'last',
 						'choices' => array(
-              array(
-                  'label' => esc_html__( 'Last Touch', 'gf-campaign-fields' ),
-                  'value' => 'last'
-              ),
-              array(
-                  'label' => esc_html__( 'First Touch', 'gf-campaign-fields' ),
-                  'value' => 'first'
-              )
-          	),
+							array(
+								'label' => esc_html__( 'Last Touch', 'gf-campaign-fields' ),
+								'value' => 'last'
+							),
+							array(
+								'label' => esc_html__( 'First Touch', 'gf-campaign-fields' ),
+								'value' => 'first'
+							)
+							),
 						'tooltip'           => esc_html__( 'Campaign attribuition model determines if the campaign information is updated on return visits or if the original campaign is maintained', 'gf-campaign-fields' ),
-            'tooltip_class'     => 'tooltipclass',
-					),array(
-            'type'              => 'text',
-            'id'                => 'aq_cookie_lifetime',
+            			'tooltip_class'     => 'tooltipclass',
+					),
+					array(
+						'type'              => 'text',
+						'id'                => 'aq_cookie_lifetime',
 						'name'              => 'aq_cookie_lifetime',
-            'label'             => esc_html__( 'Cookie Lifetime (days)', 'gf-campaign-fields' ),
-            'required'          => true,
-            'default_value'     => '30',
-            'class'             => 'medium',
-            'tooltip'           => esc_html__( 'The lifetime of the first touch campaign data.  This value is extended each time a visitor returns to the site.', 'gf-campaign-fields' ),
-            'tooltip_class'     => 'tooltipclass',
+						'label'             => esc_html__( 'Cookie Lifetime (days)', 'gf-campaign-fields' ),
+						'required'          => true,
+						'default_value'     => '30',
+						'class'             => 'medium',
+						'tooltip'           => esc_html__( 'The lifetime of the first touch campaign data.  This value is extended each time a visitor returns to the site.', 'gf-campaign-fields' ),
+            			'tooltip_class'     => 'tooltipclass',
 						'feedback_callback' => array( $this, 'validate_int' ),
 					),array(
 						'type'              => 'text',
@@ -162,6 +163,7 @@ class AqGFCampaignAddOn extends \GFAddOn {
 	public function set_campaign_parms() {
 
 		$attribution = $this->get_plugin_setting('aq_campaign_attribution');
+		$attribution = ($attribution == '') ? 'last' : $attribution;
 		$nameqs = $this->get_plugin_setting('aq_campaign_name');
 		$nameqs = ($nameqs == '') ? 'utm_campaign' : $nameqs;
 		$sourceqs = $this->get_plugin_setting('aq_campaign_source');
