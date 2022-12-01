@@ -98,7 +98,7 @@ class GravityFormsCampaign_Bootstrap {
 			$jsFileURI = _get_plugin_url() . '/dist/js/' . basename($jsFilePath[0]);
 		}
 		wp_enqueue_script( 'js-cookie', _get_plugin_url() . '/src/dist/js/js.cookie.min.js'  , array() , null , true );
-		wp_enqueue_script( 'gf-campaign-fields-js', $jsFileURI , array('jquery') , null , true );
+		wp_enqueue_script( 'gf-campaign-fields-js', $jsFileURI , array('jquery','js-cookie') , null , true );
 		
 	}
 
