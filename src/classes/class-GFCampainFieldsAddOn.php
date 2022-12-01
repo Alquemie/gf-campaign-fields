@@ -150,7 +150,7 @@ class AqGFCampaignAddOn extends \GFAddOn {
 						'required'          => true,
 						'default_value'     => 'matchtype',
 						'class'             => 'medium',
-						'tooltip'           => esc_html__( 'Query String Variable that is used to set campaign match type', GF_CAMPAIGN_FIELD_SLUG ),
+						'tooltip'           => esc_html__( 'Query String Variable that is used to set campaign match type', 'gf-campaign-fields' ),
 						'tooltip_class'     => 'tooltipclass',
 						'feedback_callback' => array( $this, 'no_whitespace' ),
 					)
