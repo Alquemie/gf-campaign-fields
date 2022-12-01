@@ -40,6 +40,12 @@ No, you must purchase your own license of Gravity Forms
 3. Campaign parameters stored as JSON string in form entry
 
 ## Changelog
+### 3.0.2
+* Added Activation Hook that inserts field into existing forms
+
+### 3.0.1
+* Bug Fix - get_plugin_url() function
+
 ### 3.0.0
 * Complete Code Refactor 
 * NOT compatible with previous versions

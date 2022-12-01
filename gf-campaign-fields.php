@@ -9,7 +9,7 @@ Gravity Forms Camaign Info AddOn
 Plugin Name: Gravity Forms Campaign Info AddOn
 Plugin URI: https://www.gravityaddons.com/
 Description: Creates new field that is populated with a JSON object containing Google Analytics campaign information (UTM Parameters) and additional advertising information sent via query string parameters.
-Version: 3.0.1
+Version: 3.0.2
 Author: Alquemie
 Author URI: https://www.alquemie.net/
 Text Domain: gf-campaign-fields
@@ -107,6 +107,37 @@ endif;
 
 add_action( 'gform_loaded', array( '\Alquemie\CampaignFields\GravityFormsCampaign_Bootstrap', 'load' ), 5 );
 add_action( 'admin_notices',  '\Alquemie\CampaignFields\missing_main_notice'  );
+register_activation_hook( __FILE__, '\Alquemie\CampaignFields\gf_campaign_fields_activate' );
+
+/**
+ * Activate the plugin.
+ */
+function gf_campaign_fields_activate() { 
+	add_action( 'gform_loaded', '\Alquemie\CampaignFields\addCampaignField2Existing', 20 );
+}
+
+function addCampaignField2Existing() {
+	$forms = \GFAPI::get_forms();
+
+	foreach ($forms as $form) {
+		foreach ($form['fields'] as $f) {
+			if ($f['type'] == 'aqGoogleAnalytics') { $hasField = true; }
+		}
+
+		if (!$hasField) {
+			$form['is_active'] = '1';
+			$new_field_id = \GFFormsModel::get_next_field_id( $form['fields'] );
+			$properties['type'] = 'aqGoogleAnalytics';
+			$properties['id']  = $new_field_id;
+			$properties['label'] = 'Campagin Details';
+			$properties['size'] = 'small';
+			$field = \GF_Fields::create( $properties );
+			$form['fields'][] = $field;
+			$result = \GFAPI::update_form( $form );
+		}
+	}
+
+}
 
 function campaign_fields_addon() {
     return AqGFCampaignAddOn::get_instance();
