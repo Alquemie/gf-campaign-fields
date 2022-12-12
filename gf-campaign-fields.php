@@ -9,7 +9,7 @@ Gravity Forms Camaign Info AddOn
 Plugin Name: Gravity Forms Campaign Info AddOn
 Plugin URI: https://www.gravityaddons.com/
 Description: Creates new field that is populated with a JSON object containing Google Analytics campaign information (UTM Parameters) and additional advertising information sent via query string parameters.
-Version: 3.0.2
+Version: 3.0.3
 Author: Alquemie
 Author URI: https://www.alquemie.net/
 Text Domain: gf-campaign-fields
@@ -97,7 +97,7 @@ class GravityFormsCampaign_Bootstrap {
 			$jsFilePath = glob( _get_plugin_directory() . '/dist/js/public.*.js' );
 			$jsFileURI = _get_plugin_url() . '/dist/js/' . basename($jsFilePath[0]);
 		}
-		wp_enqueue_script( 'js-cookie', _get_plugin_url() . '/src/dist/js/js.cookie.min.js'  , array() , null , true );
+		wp_enqueue_script( 'js-cookie', _get_plugin_url() . '/dist/js/js.cookie.min.js'  , array() , null , true );
 		wp_enqueue_script( 'gf-campaign-fields-js', $jsFileURI , array('jquery','js-cookie') , null , true );
 		
 	}
