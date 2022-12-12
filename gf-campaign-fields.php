@@ -113,10 +113,6 @@ register_activation_hook( __FILE__, '\Alquemie\CampaignFields\gf_campaign_fields
  * Activate the plugin.
  */
 function gf_campaign_fields_activate() { 
-	add_action( 'gform_loaded', '\Alquemie\CampaignFields\addCampaignField2Existing', 20 );
-}
-
-function addCampaignField2Existing() {
 	$forms = \GFAPI::get_forms();
 
 	foreach ($forms as $form) {
@@ -136,7 +132,6 @@ function addCampaignField2Existing() {
 			$result = \GFAPI::update_form( $form );
 		}
 	}
-
 }
 
 function campaign_fields_addon() {
